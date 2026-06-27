@@ -8,7 +8,11 @@
 #   ./scripts/push-feature.ps1 -Branch "fix/bug-42" -CommitMessage "fix: handle edge case"
 #
 # Setup (run once, in your terminal — never paste the token in chat):
-#   gh auth login   # interactive; stores token in Windows Credential Manager
+#   git config --global credential.helper manager
+# Then run `git push` once — it'll prompt for username + token, then
+# store them in Windows Credential Manager (encrypted via DPAPI).
+#
+# To wipe cached creds:  cmdkey /delete:git:https://github.com
 
 param(
     [Parameter(Mandatory = $true)]
