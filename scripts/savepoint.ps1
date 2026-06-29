@@ -39,6 +39,22 @@ function Get-WATNow {
     return (Get-Date).ToUniversalTime().AddHours(1)
 }
 
+# Find the official GitHub CLI (cli/cli). On Windows the npm-shimmed "Node GH"
+# (an unrelated, abandoned Node.js port) often shadows the real one on PATH.
+function Get-GhExe {
+    $candidates = @(
+        "C:\Program Files\GitHub CLI\gh.exe"
+        "C:\Program Files (x86)\GitHub CLI\gh.exe"
+    )
+    foreach ($p in $candidates) {
+        if (Test-Path $p) { return $p }
+    }
+    # Fall back to whatever `gh.exe` resolves to (PowerShell resolves .exe first)
+    $resolved = Get-Command gh.exe -ErrorAction SilentlyContinue
+    if ($resolved) { return $resolved.Source }
+    return $null
+}
+
 # --- sanity checks ------------------------------------------------------------
 
 if (-not (Test-Path ".git")) {
@@ -91,11 +107,14 @@ if ($TriggerNote) {
     $noteLine = ""
 }
 
+# Reflect actual gate state in the commit body so reviewers see what ran
+$gatesStatus = if ($SkipGates) { "bypassed (-SkipGates)" } else { "passing" }
+
 $body = @"
 Auto-savepoint from dev session.
 
-- typecheck:   passing
-- lint:        passing
+- typecheck:   $gatesStatus
+- lint:        $gatesStatus
 - files:       $fileCount changed
 - branch:      $branch
 - triggered:   $(if ($TriggerNote) { "manual ($TriggerNote)" } else { "manual/cron" })
@@ -140,18 +159,37 @@ git push -u origin $branch
 
 $prUrl = "https://github.com/adeolaalabi2017/TrustVend-Nigeria/pull/new/$branch"
 Write-Host ""
-Write-Host "Open a PR: $prUrl" -ForegroundColor Green
+Write-Host "PR URL: $prUrl" -ForegroundColor Green
 
-if (Get-Command gh -ErrorAction SilentlyContinue) {
-    gh auth status 2>&1 | Out-Null
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "Opening PR via gh (base: main)..." -ForegroundColor Cyan
-        gh pr create --base main --head $branch --title $title --body $body --fill 2>&1 | Out-String | Write-Host
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "gh PR creation failed -- use the URL above." -ForegroundColor Yellow
+# gh-cli detection is defensive: gh is OAuth-based (separate from git's PAT helper)
+# and may not be authenticated even when git push works fine.
+$ghReady = $false
+$ghPath = Get-GhExe
+if ($ghPath) {
+    try {
+        & $ghPath auth status 2>&1 | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            $ghReady = $true
         }
+    } catch {
+        # gh auth status on some versions throws before exiting cleanly; treat as not-ready
+        $ghReady = $false
+    }
+}
+
+if ($ghReady) {
+    Write-Host "Opening PR via $ghPath (base: main)..." -ForegroundColor Cyan
+    & $ghPath pr create --base main --head $branch --title $title --body $body --fill
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "gh PR create failed -- use the URL above." -ForegroundColor Yellow
     } else {
-        Write-Host "gh not authenticated -- use the URL above." -ForegroundColor Yellow
+        Write-Host "PR opened." -ForegroundColor Green
+    }
+} else {
+    if ($ghPath) {
+        Write-Host "gh not authenticated (found at $ghPath) -- open the PR URL above manually." -ForegroundColor Yellow
+    } else {
+        Write-Host "gh CLI not installed -- open the PR URL above manually." -ForegroundColor Yellow
     }
 }
 
