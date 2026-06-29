@@ -3,19 +3,27 @@ import { NextRequest } from "next/server";
 import { requireSameOrigin } from "./request-guard";
 
 describe("requireSameOrigin", () => {
-  let originalEnv: string | undefined;
+  // Use a write-through env-var wrapper; process.env.NODE_ENV is typed
+  // readonly, and tests need to set it without fighting the type system.
+  const setEnv = (k: "NODE_ENV" | "NEXTAUTH_URL", v: string | undefined) => {
+    (process.env as Record<string, string | undefined>)[k] = v;
+  };
+  let originalNodeEnv: string | undefined;
+  let originalNextAuthUrl: string | undefined;
 
   beforeEach(() => {
-    originalEnv = process.env.NODE_ENV;
+    originalNodeEnv = process.env.NODE_ENV;
+    originalNextAuthUrl = process.env.NEXTAUTH_URL;
   });
 
   afterEach(() => {
-    if (originalEnv !== undefined) {
-      process.env.NODE_ENV = originalEnv;
-    }
+    setEnv("NODE_ENV", originalNodeEnv);
+    setEnv("NEXTAUTH_URL", originalNextAuthUrl);
   });
 
   it("allows GET requests without origin check", () => {
+    setEnv("NODE_ENV", "production");
+    setEnv("NEXTAUTH_URL", "https://example.com");
     const req = new NextRequest("https://example.com/api/test", {
       method: "GET",
     });
@@ -24,6 +32,8 @@ describe("requireSameOrigin", () => {
   });
 
   it("allows HEAD requests without origin check", () => {
+    setEnv("NODE_ENV", "production");
+    setEnv("NEXTAUTH_URL", "https://example.com");
     const req = new NextRequest("https://example.com/api/test", {
       method: "HEAD",
     });
@@ -32,6 +42,8 @@ describe("requireSameOrigin", () => {
   });
 
   it("allows OPTIONS requests without origin check", () => {
+    setEnv("NODE_ENV", "production");
+    setEnv("NEXTAUTH_URL", "https://example.com");
     const req = new NextRequest("https://example.com/api/test", {
       method: "OPTIONS",
     });
@@ -40,7 +52,8 @@ describe("requireSameOrigin", () => {
   });
 
   it("allows POST with matching origin in production", () => {
-    process.env.NODE_ENV = "production";
+    setEnv("NODE_ENV", "production");
+    setEnv("NEXTAUTH_URL", "https://example.com");
     const req = new NextRequest("https://example.com/api/test", {
       method: "POST",
       headers: { origin: "https://example.com" },
@@ -50,7 +63,8 @@ describe("requireSameOrigin", () => {
   });
 
   it("rejects POST with non-matching origin in production", () => {
-    process.env.NODE_ENV = "production";
+    setEnv("NODE_ENV", "production");
+    setEnv("NEXTAUTH_URL", "https://example.com");
     const req = new NextRequest("https://example.com/api/test", {
       method: "POST",
       headers: { origin: "https://evil.com" },
@@ -61,7 +75,8 @@ describe("requireSameOrigin", () => {
   });
 
   it("allows POST without origin in development", () => {
-    process.env.NODE_ENV = "development";
+    setEnv("NODE_ENV", "development");
+    setEnv("NEXTAUTH_URL", "http://localhost:3000");
     const req = new NextRequest("http://localhost:3000/api/test", {
       method: "POST",
     });
@@ -70,7 +85,8 @@ describe("requireSameOrigin", () => {
   });
 
   it("allows POST with localhost origin in development", () => {
-    process.env.NODE_ENV = "development";
+    setEnv("NODE_ENV", "development");
+    setEnv("NEXTAUTH_URL", "http://localhost:3000");
     const req = new NextRequest("http://localhost:3000/api/test", {
       method: "POST",
       headers: { origin: "http://localhost:3000" },
@@ -80,7 +96,8 @@ describe("requireSameOrigin", () => {
   });
 
   it("rejects POST without origin in production", () => {
-    process.env.NODE_ENV = "production";
+    setEnv("NODE_ENV", "production");
+    setEnv("NEXTAUTH_URL", "https://example.com");
     const req = new NextRequest("https://example.com/api/test", {
       method: "POST",
     });

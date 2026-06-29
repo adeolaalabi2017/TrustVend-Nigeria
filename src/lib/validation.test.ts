@@ -27,14 +27,14 @@ describe("emailSchema", () => {
 });
 
 describe("passwordSchema", () => {
-  it("accepts valid passwords (6-128 chars)", () => {
-    expect(passwordSchema.parse("123456")).toBe("123456");
+  it("accepts valid passwords (8-128 chars)", () => {
+    expect(passwordSchema.parse("12345678")).toBe("12345678");
     expect(passwordSchema.parse("MySecurePassword1")).toBe("MySecurePassword1");
     expect(passwordSchema.parse("a".repeat(128))).toBe("a".repeat(128));
   });
 
-  it("rejects passwords too short (< 6 chars)", () => {
-    expect(() => passwordSchema.parse("12345")).toThrow();
+  it("rejects passwords too short (< 8 chars)", () => {
+    expect(() => passwordSchema.parse("1234567")).toThrow();
     expect(() => passwordSchema.parse("")).toThrow();
   });
 

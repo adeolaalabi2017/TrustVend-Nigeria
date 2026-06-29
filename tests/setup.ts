@@ -29,5 +29,5 @@ vi.mock("fs", () => ({
 if (!globalThis.crypto) {
   (globalThis as any).crypto = { randomUUID: () => Math.random().toString(36).slice(2) };
 } else if (!globalThis.crypto.randomUUID) {
-  globalThis.crypto.randomUUID = () => Math.random().toString(36).slice(2);
+  (globalThis.crypto as any).randomUUID = () => Math.random().toString(36).slice(2);
 }

@@ -32,7 +32,7 @@ test.describe("Authentication", () => {
     await page.getByLabel(/password/i).fill("password123");
     await page.getByRole("button", { name: /sign in|log in|login/i }).click();
 
-    await expect(page.locator("text=customer|chioma|logout", { exact: false }).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=customer|chioma|logout").first()).toBeVisible({ timeout: 10000 });
   });
 
   test("invalid login shows error", async ({ page }) => {

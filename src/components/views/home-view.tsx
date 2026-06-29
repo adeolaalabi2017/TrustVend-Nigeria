@@ -51,8 +51,11 @@ export function HomeView() {
   const [searchInput, setSearchInput] = useState(filters.q);
 
   // Keep local input in sync if filters change elsewhere (e.g. clearing via
-  // "Clear filters" button or via URL hydration).
+  // "Clear filters" button or via URL hydration). This is a legitimate
+  // external-system sync: URL is the source of truth, local state mirrors it
+  // for the debounce.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearchInput(filters.q);
   }, [filters.q]);
 

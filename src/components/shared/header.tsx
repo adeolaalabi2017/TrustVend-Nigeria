@@ -13,7 +13,7 @@ import {
   User,
   ChevronDown,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,9 +35,14 @@ import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 function useMounted() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted;
+  // useSyncExternalStore is the canonical "am I on the client" probe; an empty
+  // subscribe is fine because we never re-render based on store changes -- we
+  // just want a stable client/server discriminator.
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 }
 
 function NavLink({

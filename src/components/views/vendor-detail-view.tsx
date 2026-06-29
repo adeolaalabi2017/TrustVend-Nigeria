@@ -429,7 +429,6 @@ function ReviewSheet({ open, onOpenChange, vendorId, existing }: {
   // between vendors with the sheet reused).
   useEffect(() => {
     reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existing?.rating, existing?.comment, vendorId]);
 
   async function submit() {
