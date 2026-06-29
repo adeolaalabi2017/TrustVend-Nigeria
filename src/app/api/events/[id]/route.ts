@@ -3,12 +3,13 @@ import { api, convexMutate, convexQuery, getUserId, requireUserId } from "@/lib/
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const viewerId = await getUserId();
-    let result = await convexQuery(api.events.getById, { id: params.id, viewerId: viewerId ?? undefined });
+    let result = await convexQuery(api.events.getById, { id, viewerId: viewerId ?? undefined });
     if (!result) {
-      const bySlug = await convexQuery(api.events.getBySlug, { slug: params.id });
+      const bySlug = await convexQuery(api.events.getBySlug, { slug: id });
       if (!bySlug) return NextResponse.json({ error: "Not found" }, { status: 404 });
       result = bySlug as any;
     }
@@ -25,7 +26,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const userId = await requireUserId().catch(() => null);
   if (!userId)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -34,7 +36,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   try {
     const result = await convexMutate(api.events.update, {
       userId,
-      id: params.id,
+      id,
       patch: body,
     });
     return NextResponse.json(result);
@@ -46,12 +48,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const userId = await requireUserId().catch(() => null);
   if (!userId)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   try {
-    const result = await convexMutate(api.events.remove, { userId, id: params.id });
+    const result = await convexMutate(api.events.remove, { userId, id });
     return NextResponse.json(result);
   } catch (err) {
     return NextResponse.json(

@@ -3,11 +3,12 @@ import { api, convexMutate, convexQuery, getUserId, requireUserId } from "@/lib/
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const userId = await getUserId();
   try {
     const reviews = await convexQuery(api.reviews.listForVendor, {
-      vendorId: params.id,
+      vendorId: id,
       viewerId: userId ?? undefined,
     });
     return NextResponse.json({ reviews });
@@ -19,7 +20,8 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const userId = await requireUserId().catch(() => null);
   if (!userId)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -28,7 +30,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   try {
     const result = await convexMutate(api.reviews.upsert, {
       userId,
-      vendorId: params.id,
+      vendorId: id,
       rating: Number(body.rating),
       comment: String(body.comment ?? ""),
     });

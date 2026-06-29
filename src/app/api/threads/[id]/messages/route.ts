@@ -3,7 +3,8 @@ import { api, convexMutate, requireUserId } from "@/lib/convex-server";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const userId = await requireUserId().catch(() => null);
   if (!userId)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -12,7 +13,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   try {
     const result = await convexMutate(api.threads.sendMessage, {
       userId,
-      threadId: params.id,
+      threadId: id,
       body: body.body,
     });
     return NextResponse.json(result);

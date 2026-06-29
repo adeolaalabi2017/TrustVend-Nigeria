@@ -125,9 +125,9 @@ export function AdminDashboardView() {
     );
   }
 
-  const vendors = vendorsData ?? [];
+  const vendors = vendorsData?.items ?? [];
   const pending = vendors.filter((v: any) => v.status === "PENDING");
-  const users = usersData ?? [];
+  const users = usersData?.items ?? [];
 
   const navItems: NavItem[] = [
     { key: "overview", label: "Overview", icon: LayoutDashboard },
