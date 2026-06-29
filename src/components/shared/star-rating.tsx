@@ -48,7 +48,7 @@ export function InteractiveStarRating({
           key={i}
           type="button"
           onClick={() => onChange(i)}
-          className="transition-transform hover:scale-110 focus:outline-none"
+          className="rounded-sm transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           aria-label={`Rate ${i} star${i > 1 ? "s" : ""}`}
         >
           <Star

@@ -2,8 +2,9 @@
 
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
+import Image from "next/image";
 import { CalendarDays, MapPin, Search, Ticket } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAppStore } from "@/lib/store";
 import { format } from "date-fns";
 import { CATEGORIES, NIGERIAN_STATES } from "@/lib/constants";
+import { debounce } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -19,11 +21,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const SEARCH_DEBOUNCE_MS = 200;
+
 export function EventsView() {
   const { openEvent, goHome } = useAppStore();
+  const [qInput, setQInput] = useState("");
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("");
   const [state, setState] = useState("");
+
+  // Debounce the free-text filter — typing used to re-filter all 50 events
+  // on every keystroke. 200 ms feels instant but skips the thrash.
+  const commitQ = useMemo(
+    () => debounce((value: string) => setQ(value), SEARCH_DEBOUNCE_MS),
+    [],
+  );
+  useEffect(() => () => commitQ.cancel(), [commitQ]);
 
   const data = useQuery(api.events.list, {
     category: category || undefined,
@@ -59,8 +72,11 @@ export function EventsView() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
+            value={qInput}
+            onChange={(e) => {
+              setQInput(e.target.value);
+              commitQ(e.target.value);
+            }}
             placeholder="Search events..."
             className="pl-9"
             aria-label="Search events"
@@ -114,11 +130,12 @@ export function EventsView() {
             >
               {e.coverImage && (
                 <div className="aspect-[16/10] overflow-hidden bg-muted relative">
-                  <img
+                  <Image
                     src={e.coverImage}
                     alt={e.title}
-                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute bottom-3 left-3 text-white">
@@ -156,7 +173,13 @@ export function EventsView() {
                 {e.vendor && (
                   <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-border/40">
                     {e.vendor.photo && (
-                      <img src={e.vendor.photo} alt="" className="h-4 w-4 rounded-full object-cover" />
+                      <Image
+                        src={e.vendor.photo}
+                        alt=""
+                        width={16}
+                        height={16}
+                        className="h-4 w-4 rounded-full object-cover"
+                      />
                     )}
                     <span className="text-[11px] text-muted-foreground">{e.vendor.businessName}</span>
                   </div>

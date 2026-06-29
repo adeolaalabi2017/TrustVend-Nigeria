@@ -2,7 +2,7 @@
 
 import { useQuery } from "convex/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Search,
   MapPin,
@@ -36,13 +36,41 @@ import { VerifiedBadge } from "@/components/shared/verified-badge";
 import { useAppStore } from "@/lib/store";
 import { api } from "convex/_generated/api";
 import { CATEGORIES, NIGERIAN_STATES, VERIFICATION_STAGES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
 
 const PAGE_SIZE = 12;
+const SEARCH_DEBOUNCE_MS = 300;
 
 export function HomeView() {
   const { filters, setFilters, goHome, openBecomeVendor, openAuth, openBlog, openBlogPost, openEvents, openEvent } = useAppStore();
   const [page, setPage] = useState(1);
+
+  // Local mirror of the search input. Commits to the global store (and
+  // therefore URL + Convex query) only after the user stops typing, so a
+  // single search like "fashion" produces one history entry and one query.
+  const [searchInput, setSearchInput] = useState(filters.q);
+
+  // Keep local input in sync if filters change elsewhere (e.g. clearing via
+  // "Clear filters" button or via URL hydration).
+  useEffect(() => {
+    setSearchInput(filters.q);
+  }, [filters.q]);
+
+  // Debounced commit. Updated whenever `searchInput` changes.
+  const commitSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setPage(1);
+        setFilters({ q: value });
+      }, SEARCH_DEBOUNCE_MS),
+    [setFilters],
+  );
+
+  useEffect(() => {
+    return () => {
+      commitSearch.cancel();
+    };
+  }, [commitSearch]);
 
   const statsData = useQuery(api.stats.home);
   const featuredData = useQuery(api.vendors.featured, { limit: 60 });
@@ -103,8 +131,11 @@ export function HomeView() {
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    value={filters.q}
-                    onChange={(e) => updateFilters({ q: e.target.value })}
+                    value={searchInput}
+                    onChange={(e) => {
+                      setSearchInput(e.target.value);
+                      commitSearch(e.target.value);
+                    }}
                     placeholder="Search vendors, products, services..."
                     className="pl-9 border-0 shadow-none focus-visible:ring-0 h-11"
                     aria-label="Search vendors"
@@ -171,7 +202,6 @@ export function HomeView() {
                   className="w-full h-[440px] object-cover"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               </div>
               <div className="absolute -bottom-5 -left-5 bg-card rounded-2xl shadow-xl ring-1 ring-border p-4 w-56">
                 <div className="flex items-center gap-2 mb-1">
@@ -411,12 +441,13 @@ export function HomeView() {
                 onClick={() => openBlogPost(p.id)}
               >
                 {p.coverImage && (
-                  <div className="aspect-[16/10] overflow-hidden bg-muted">
-                    <img
+                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                    <Image
                       src={p.coverImage}
                       alt={p.title}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                 )}
@@ -466,11 +497,12 @@ export function HomeView() {
               >
                 {e.coverImage ? (
                   <div className="aspect-[16/10] overflow-hidden bg-muted relative">
-                    <img
+                    <Image
                       src={e.coverImage}
                       alt={e.title}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                     <div className="absolute bottom-2 left-3 text-white">
@@ -502,7 +534,15 @@ export function HomeView() {
                   </div>
                   {e.vendor && (
                     <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-border/40">
-                      {e.vendor.photo && <img src={e.vendor.photo} alt="" className="h-4 w-4 rounded-full object-cover" />}
+                      {e.vendor.photo && (
+                        <Image
+                          src={e.vendor.photo}
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="h-4 w-4 rounded-full object-cover"
+                        />
+                      )}
                       <span className="text-[11px] text-muted-foreground">{e.vendor.businessName}</span>
                     </div>
                   )}
@@ -516,10 +556,6 @@ export function HomeView() {
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-16">
         <div className="rounded-3xl bg-gradient-to-br from-primary to-emerald-700 text-white p-8 sm:p-12 text-center relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white" />
-            <div className="absolute -bottom-10 -left-10 h-52 w-52 rounded-full bg-white" />
-          </div>
           <div className="relative">
             <Store className="h-10 w-10 mx-auto mb-4" />
             <h2 className="text-3xl sm:text-4xl font-extrabold">

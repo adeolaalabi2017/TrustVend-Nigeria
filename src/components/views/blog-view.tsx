@@ -2,19 +2,29 @@
 
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
+import Image from "next/image";
 import { Calendar, Clock, ArrowRight, Newspaper, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAppStore } from "@/lib/store";
 import { formatDistanceToNow, format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
+
+const SEARCH_DEBOUNCE_MS = 200;
 
 export function BlogView() {
   const { openBlogPost, goHome } = useAppStore();
+  const [qInput, setQInput] = useState("");
   const [q, setQ] = useState("");
+  const commitQ = useMemo(
+    () => debounce((value: string) => setQ(value), SEARCH_DEBOUNCE_MS),
+    [],
+  );
+  useEffect(() => () => commitQ.cancel(), [commitQ]);
+
   const data = useQuery(api.posts.list, { onlyPublished: true, limit: 12 });
   const isLoading = data === undefined;
 
@@ -45,8 +55,11 @@ export function BlogView() {
       <div className="relative max-w-md mb-8">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
+          value={qInput}
+          onChange={(e) => {
+            setQInput(e.target.value);
+            commitQ(e.target.value);
+          }}
           placeholder="Search articles..."
           className="pl-9"
           aria-label="Search articles"
@@ -80,11 +93,13 @@ export function BlogView() {
             >
               <div className="grid md:grid-cols-2 gap-0">
                 {featured.coverImage && (
-                  <div className="aspect-[16/10] md:aspect-auto overflow-hidden bg-muted">
-                    <img
+                  <div className="relative aspect-[16/10] md:aspect-auto overflow-hidden bg-muted">
+                    <Image
                       src={featured.coverImage}
                       alt={featured.title}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                 )}
@@ -128,12 +143,13 @@ export function BlogView() {
                   onClick={() => openBlogPost(p.id)}
                 >
                   {p.coverImage && (
-                    <div className="aspect-[16/10] overflow-hidden bg-muted">
-                      <img
+                    <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                      <Image
                         src={p.coverImage}
                         alt={p.title}
-                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   )}

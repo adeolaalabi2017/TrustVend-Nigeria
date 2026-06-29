@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import {
   ArrowLeft,
   CalendarDays,
@@ -156,15 +157,22 @@ export function EventDetailView() {
       </Button>
 
       {event.coverImage && (
-        <div className="rounded-2xl overflow-hidden bg-muted mb-6">
-          <img src={event.coverImage} alt={event.title} className="w-full aspect-[16/9] object-cover" />
+        <div className="relative rounded-2xl overflow-hidden bg-muted mb-6 aspect-[16/9]">
+          <Image
+            src={event.coverImage}
+            alt={event.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 1024px"
+            priority
+            className="object-cover"
+          />
         </div>
       )}
 
       <div className="flex flex-wrap items-center gap-2 mb-3">
         {event.category && <Badge variant="secondary">{event.category}</Badge>}
         {event.price && (
-          <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+          <Badge className="bg-warning text-warning-fg hover:bg-warning">
             <Ticket className="mr-1 h-3 w-3" /> {event.price}
           </Badge>
         )}
@@ -254,7 +262,13 @@ export function EventDetailView() {
           onClick={() => event.vendor && openVendor(event.vendor.id)}
         >
           {event.vendor.photo ? (
-            <img src={event.vendor.photo} alt="" className="h-12 w-12 rounded-xl object-cover" />
+            <Image
+              src={event.vendor.photo}
+              alt={event.vendor.businessName ?? "Vendor"}
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-xl object-cover"
+            />
           ) : (
             <span className="grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary">
               <Store className="h-5 w-5" />

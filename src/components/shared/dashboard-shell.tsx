@@ -189,12 +189,12 @@ export function StatCard({
   accent?: "emerald" | "amber" | "sky" | "violet" | "rose" | "teal";
 }) {
   const accentMap: Record<string, string> = {
-    emerald: "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
-    amber: "bg-amber-100 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
-    sky: "bg-sky-100 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400",
-    violet: "bg-violet-100 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400",
-    rose: "bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400",
-    teal: "bg-teal-100 text-teal-600 dark:bg-teal-950/40 dark:text-teal-400",
+    emerald: "bg-success text-success-fg",
+    amber: "bg-warning text-warning-fg",
+    sky: "bg-info text-info-fg",
+    violet: "bg-primary/15 text-primary",
+    rose: "bg-danger text-danger-fg",
+    teal: "bg-success text-success-fg",
   };
   return (
     <div className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
@@ -207,8 +207,8 @@ export function StatCard({
             className={cn(
               "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold",
               trend.direction === "up"
-                ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
-                : "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400"
+                ? "bg-success/15 text-success-fg"
+                : "bg-danger/15 text-danger-fg"
             )}
           >
             {trend.direction === "up" ? "↑" : "↓"} {trend.value}
@@ -282,10 +282,10 @@ export function PanelCard({
 
 export function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { cls: string; label: string }> = {
-    PENDING: { cls: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400", label: "Pending" },
-    APPROVED: { cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400", label: "Approved" },
-    SUSPENDED: { cls: "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400", label: "Suspended" },
-    REJECTED: { cls: "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400", label: "Rejected" },
+    PENDING: { cls: "bg-warning text-warning-fg", label: "Pending" },
+    APPROVED: { cls: "bg-success text-success-fg", label: "Approved" },
+    SUSPENDED: { cls: "bg-danger text-danger-fg", label: "Suspended" },
+    REJECTED: { cls: "bg-danger text-danger-fg", label: "Rejected" },
   };
   const cfg = map[status] ?? { cls: "bg-muted text-muted-foreground", label: status };
   return (

@@ -2,6 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
+import Image from "next/image";
 import { ArrowLeft, Calendar, Clock, Eye, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -83,8 +84,15 @@ export function BlogDetailView() {
         </div>
 
         {post.coverImage && (
-          <div className="mt-6 rounded-2xl overflow-hidden bg-muted">
-            <img src={post.coverImage} alt={post.title} className="w-full aspect-[16/9] object-cover" />
+          <div className="relative mt-6 rounded-2xl overflow-hidden bg-muted aspect-[16/9]">
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 1024px"
+              priority
+              className="object-cover"
+            />
           </div>
         )}
 

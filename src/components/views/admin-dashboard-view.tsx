@@ -2,7 +2,8 @@
 
 import { useMutation, useQuery } from "convex/react";
 import { useSession } from "next-auth/react";
-import { useState, type ReactNode } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   LayoutDashboard,
   ClipboardCheck,
@@ -94,7 +95,7 @@ import { toast } from "sonner";
 import { formatDistanceToNow, format } from "date-fns";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
 
 export function AdminDashboardView() {
   const { data: session } = useSession();
@@ -323,10 +324,10 @@ function OverviewTab({
 
 function MiniStat({ label, value, icon: Icon, accent }: any) {
   const map: Record<string, string> = {
-    amber: "bg-amber-100 text-amber-600",
-    rose: "bg-rose-100 text-rose-600",
-    sky: "bg-sky-100 text-sky-600",
-    emerald: "bg-emerald-100 text-emerald-600",
+    amber: "bg-warning text-warning-fg",
+    rose: "bg-danger text-danger-fg",
+    sky: "bg-info text-info-fg",
+    emerald: "bg-success text-success-fg",
   };
   return (
     <div className="rounded-xl border border-border/60 bg-card p-4 flex items-center gap-3 shadow-sm">
@@ -404,7 +405,7 @@ function ApprovalsTab({ pending, loading, acting, act, onOpenVendor }: any) {
           <h2 className="text-lg font-bold">Pending Applications</h2>
           <p className="text-sm text-muted-foreground">Review and approve new vendor listings.</p>
         </div>
-        <Badge variant="secondary" className="bg-amber-100 text-amber-700">{pending.length} pending</Badge>
+        <Badge variant="secondary" className="bg-warning text-warning-fg">{pending.length} pending</Badge>
       </div>
 
       {loading ? (
@@ -511,6 +512,13 @@ function VendorsTab({ vendors, loading, acting, act, onOpenVendor }: any) {
   const [confirm, setConfirm] = useState<{ vendor: any; action: string; label: string; destructive?: boolean; description?: string } | null>(null);
   const [featureTarget, setFeatureTarget] = useState<any | null>(null);
 
+  const [qInput, setQInput] = useState("");
+  const commitQ = useMemo(
+    () => debounce((value: string) => setQ(value), 200),
+    [],
+  );
+  useEffect(() => () => commitQ.cancel(), [commitQ]);
+
   const filtered = vendors.filter((v: any) =>
     !q ? true : (v.businessName + v.category + v.instagramHandle + v.state).toLowerCase().includes(q.toLowerCase())
   );
@@ -524,8 +532,11 @@ function VendorsTab({ vendors, loading, acting, act, onOpenVendor }: any) {
         </div>
         <Input
           placeholder="Search vendors..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
+          value={qInput}
+          onChange={(e) => {
+            setQInput(e.target.value);
+            commitQ(e.target.value);
+          }}
           className="sm:w-64 h-9"
         />
       </div>
@@ -554,7 +565,13 @@ function VendorsTab({ vendors, loading, acting, act, onOpenVendor }: any) {
                   <TableRow key={v.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <img src={v.photos?.[0]} alt="" className="h-8 w-8 rounded object-cover shrink-0" />
+                        <Image
+                          src={v.photos?.[0] ?? "/vendors/placeholder.png"}
+                          alt=""
+                          width={32}
+                          height={32}
+                          className="h-8 w-8 rounded object-cover shrink-0"
+                        />
                         <div className="min-w-0">
                           <button onClick={() => onOpenVendor(v.id)} className="font-medium text-sm hover:text-primary truncate flex items-center gap-1">
                             {v.businessName}
@@ -749,11 +766,11 @@ function IconAction({
           <Button
             size="icon"
             variant="ghost"
-            className={cn("h-8 w-8", active && activeColor, hoverColor && `hover:${hoverColor}`)}
+            className={cn("h-10 w-10", active && activeColor, hoverColor && `hover:${hoverColor}`)}
             disabled={loading}
             onClick={onClick}
           >
-            {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : children}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : children}
           </Button>
         </TooltipTrigger>
         <TooltipContent>{tooltip}</TooltipContent>
@@ -827,7 +844,7 @@ function UsersTab({ users, currentUserId, actorId }: { users: any[]; currentUser
                         <div className="flex items-center gap-1.5">
                           {u.name || <span className="text-muted-foreground italic">—</span>}
                           {u.banned && (
-                            <Badge variant="secondary" className="bg-rose-100 text-rose-700 text-[10px]">Banned</Badge>
+                            <Badge variant="secondary" className="bg-danger text-danger-fg text-[10px]">Banned</Badge>
                           )}
                           {isSelf && <span className="text-[10px] text-muted-foreground">(you)</span>}
                         </div>
@@ -837,7 +854,7 @@ function UsersTab({ users, currentUserId, actorId }: { users: any[]; currentUser
                         <Badge variant="secondary" className={cn(
                           "text-xs",
                           u.role === "ADMIN" && "bg-primary/15 text-primary",
-                          u.role === "VENDOR" && "bg-emerald-100 text-emerald-700",
+                          u.role === "VENDOR" && "bg-success text-success-fg",
                           u.role === "CUSTOMER" && "bg-muted"
                         )}>
                           {u.role}
@@ -894,7 +911,7 @@ function UsersTab({ users, currentUserId, actorId }: { users: any[]; currentUser
 
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button size="icon" variant="ghost" className="h-8 w-8" disabled={isSelf}>
+                              <Button size="icon" variant="ghost" className="h-10 w-10" disabled={isSelf}>
                                 <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
@@ -956,7 +973,14 @@ function UsersTab({ users, currentUserId, actorId }: { users: any[]; currentUser
 /* ---------------- Reviews ---------------- */
 function ReviewsTab({ actorId }: { actorId: string }) {
   const [acting, setActing] = useState<string | null>(null);
+  const [qInput, setQInput] = useState("");
   const [q, setQ] = useState("");
+  const commitQ = useMemo(
+    () => debounce((value: string) => setQ(value), 200),
+    [],
+  );
+  useEffect(() => () => commitQ.cancel(), [commitQ]);
+
   const setHidden = useMutation(api.reviews.adminSetHidden);
   const data = useQuery(api.reviews.adminList, { actorId });
 
@@ -990,8 +1014,11 @@ function ReviewsTab({ actorId }: { actorId: string }) {
         </div>
         <Input
           placeholder="Search by vendor or comment..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
+          value={qInput}
+          onChange={(e) => {
+            setQInput(e.target.value);
+            commitQ(e.target.value);
+          }}
           className="sm:w-72 h-9"
         />
       </div>
@@ -1047,9 +1074,9 @@ function ReviewsTab({ actorId }: { actorId: string }) {
                     </TableCell>
                     <TableCell className="text-center">
                       {r.hidden ? (
-                        <Badge variant="secondary" className="bg-rose-100 text-rose-700 text-[10px]">Hidden</Badge>
+                        <Badge variant="secondary" className="bg-danger text-danger-fg text-[10px]">Hidden</Badge>
                       ) : (
-                        <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 text-[10px]">Visible</Badge>
+                        <Badge variant="secondary" className="bg-success text-success-fg text-[10px]">Visible</Badge>
                       )}
                     </TableCell>
                     <TableCell className="text-right">
@@ -1097,14 +1124,14 @@ function auditTone(action: string): "emerald" | "rose" | "muted" {
 }
 
 const TONE_BADGE: Record<string, string> = {
-  emerald: "bg-emerald-100 text-emerald-700",
-  rose: "bg-rose-100 text-rose-700",
+  emerald: "bg-success text-success-fg",
+  rose: "bg-danger text-danger-fg",
   muted: "bg-muted text-muted-foreground",
 };
 
 const TONE_DOT: Record<string, string> = {
-  emerald: "bg-emerald-500",
-  rose: "bg-rose-500",
+  emerald: "bg-success-fg",
+  rose: "bg-danger-fg",
   muted: "bg-muted-foreground/60",
 };
 
@@ -1297,10 +1324,10 @@ function BlogTab({ actorId }: { actorId: string }) {
   const t = statsData;
 
   const stats = [
-    { label: "Total Posts", value: t?.total ?? 0, icon: Newspaper, color: "bg-emerald-100 text-emerald-600" },
-    { label: "Published", value: t?.published ?? 0, icon: CheckCircle2, color: "bg-sky-100 text-sky-600" },
-    { label: "Drafts", value: t?.drafts ?? 0, icon: Pencil, color: "bg-amber-100 text-amber-600" },
-    { label: "Total Views", value: t?.totalViews ?? 0, icon: Eye, color: "bg-violet-100 text-violet-600" },
+    { label: "Total Posts", value: t?.total ?? 0, icon: Newspaper, color: "bg-success text-success-fg" },
+    { label: "Published", value: t?.published ?? 0, icon: CheckCircle2, color: "bg-info text-info-fg" },
+    { label: "Drafts", value: t?.drafts ?? 0, icon: Pencil, color: "bg-warning text-warning-fg" },
+    { label: "Total Views", value: t?.totalViews ?? 0, icon: Eye, color: "bg-primary/15 text-primary" },
   ];
 
   function openNew() {
@@ -1407,7 +1434,7 @@ function BlogTab({ actorId }: { actorId: string }) {
                     <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{p.author.name}</TableCell>
                     <TableCell className="text-center">
                       {p.published ? (
-                        <Badge className="bg-emerald-100 text-emerald-700">Published</Badge>
+                        <Badge className="bg-success text-success-fg">Published</Badge>
                       ) : (
                         <Badge variant="secondary">Draft</Badge>
                       )}
@@ -1418,10 +1445,10 @@ function BlogTab({ actorId }: { actorId: string }) {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => openEdit(p)}>
+                        <Button size="icon" variant="ghost" className="h-10 w-10" onClick={() => openEdit(p)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button size="icon" variant="ghost" className="h-8 w-8 text-rose-600" onClick={() => setDeleteId(p.id)}>
+                        <Button size="icon" variant="ghost" className="h-10 w-10 text-rose-600" onClick={() => setDeleteId(p.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

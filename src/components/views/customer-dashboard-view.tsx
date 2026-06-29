@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import {
   Bookmark,
   CalendarCheck,
@@ -37,11 +38,11 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLE: Record<string, string> = {
-  PENDING: "bg-amber-100 text-amber-700",
-  CONFIRMED: "bg-emerald-100 text-emerald-700",
-  DECLINED: "bg-rose-100 text-rose-700",
-  CANCELLED: "bg-zinc-200 text-zinc-700",
-  COMPLETED: "bg-blue-100 text-blue-700",
+  PENDING: "bg-warning text-warning-fg",
+  CONFIRMED: "bg-success text-success-fg",
+  DECLINED: "bg-danger text-danger-fg",
+  CANCELLED: "bg-muted text-muted-foreground",
+  COMPLETED: "bg-info text-info-fg",
 };
 
 export function CustomerDashboardView() {
@@ -129,8 +130,14 @@ export function CustomerDashboardView() {
                   onClick={() => openVendor(b.vendor.id)}
                 >
                   {b.vendor.coverPhoto && (
-                    <div className="aspect-[16/9] overflow-hidden bg-muted">
-                      <img src={b.vendor.coverPhoto} alt="" className="h-full w-full object-cover" loading="lazy" />
+                    <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+                      <Image
+                        src={b.vendor.coverPhoto}
+                        alt={b.vendor.businessName ?? "Saved vendor"}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                      />
                     </div>
                   )}
                   <div className="p-3">
@@ -214,8 +221,14 @@ export function CustomerDashboardView() {
                   onClick={() => openEvent(b.event.id)}
                 >
                   {b.event.coverImage && (
-                    <div className="aspect-[16/10] overflow-hidden bg-muted">
-                      <img src={b.event.coverImage} alt="" className="h-full w-full object-cover" loading="lazy" />
+                    <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                      <Image
+                        src={b.event.coverImage}
+                        alt={b.event.title ?? "Saved event"}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                      />
                     </div>
                   )}
                   <div className="p-3">

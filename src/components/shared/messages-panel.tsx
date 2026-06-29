@@ -146,7 +146,7 @@ export function MessagesPanel({ embedded = false }: MessagesPanelProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden h-8 w-8"
+                className="md:hidden h-10 w-10"
                 onClick={() => setActiveId(null)}
               >
                 <ArrowLeft className="h-4 w-4" />

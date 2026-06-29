@@ -61,6 +61,22 @@ export const isBookmarked = query({
   },
 });
 
+/**
+ * Returns the set of vendor IDs the current user has bookmarked.
+ * Used by VendorCard on listing pages so each card can seed its own
+ * bookmarked state without triggering one query per card.
+ */
+export const getMyBookmarkSet = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const rows = await ctx.db
+      .query("bookmarks")
+      .withIndex("by_user", (q) => q.eq("userId", userId as any))
+      .collect();
+    return rows.map((b) => String(b.vendorId));
+  },
+});
+
 export const toggle = mutation({
   args: { userId: v.string(), vendorId: v.string() },
   handler: async (ctx, { userId, vendorId }) => {

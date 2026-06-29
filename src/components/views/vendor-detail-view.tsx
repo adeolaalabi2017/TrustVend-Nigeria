@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery } from "convex/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
   ArrowLeft,
@@ -65,9 +65,16 @@ export function VendorDetailView() {
   const toggleBookmark = useMutation(api.bookmarks.toggle);
   const trackView = useMutation(api.vendors.trackView);
 
-  if (vendorId && data === undefined) {
+  // Record exactly one view per vendor per mount — never during render.
+  // Guards against StrictMode double-invoke and re-renders from query updates.
+  const trackedVendorRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!vendorId) return;
+    if (!data) return; // wait for first successful query before counting
+    if (trackedVendorRef.current === vendorId) return;
+    trackedVendorRef.current = vendorId;
     trackView({ vendorId, ip: "0.0.0.0" }).catch(() => {});
-  }
+  }, [vendorId, data, trackView]);
 
   const vendor = data?.vendor;
   const reviews = data?.reviews ?? [];
@@ -86,12 +93,12 @@ export function VendorDetailView() {
   function handleWhatsApp() {
     if (!vendor?.whatsappNumber) return;
     const num = vendor.whatsappNumber.replace(/\D/g, "");
-    window.open(`https://wa.me/${num}`, "_blank");
+    window.open(`https://wa.me/${num}`, "_blank", "noopener,noreferrer");
   }
 
   function handleInstagram() {
     if (!vendor?.instagramUrl) return;
-    window.open(vendor.instagramUrl, "_blank");
+    window.open(vendor.instagramUrl, "_blank", "noopener,noreferrer");
   }
 
   if (isLoading) {
@@ -158,11 +165,11 @@ export function VendorDetailView() {
             <div className="flex flex-wrap items-center gap-2 mb-2">
               {vendor.verified && <VerifiedBadge size="md" />}
               {vendor.available ? (
-                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1" />Available
+                <Badge className="bg-success text-success-fg hover:bg-success">
+                  <span className="h-1.5 w-1.5 rounded-full bg-success-fg mr-1" />Available
                 </Badge>
               ) : (
-                <Badge variant="secondary" className="bg-rose-100 text-rose-700 hover:bg-rose-100">
+                <Badge variant="secondary" className="bg-danger text-danger-fg hover:bg-danger">
                   Unavailable
                 </Badge>
               )}
@@ -407,6 +414,7 @@ function ReviewSheet({ open, onOpenChange, vendorId, existing }: {
   open: boolean; onOpenChange: (v: boolean) => void; vendorId: string;
   existing: { rating: number; comment: string } | null | undefined;
 }) {
+  const { data: session } = useSession();
   const [rating, setRating] = useState(existing?.rating ?? 0);
   const [comment, setComment] = useState(existing?.comment ?? "");
   const [loading, setLoading] = useState(false);
@@ -417,12 +425,31 @@ function ReviewSheet({ open, onOpenChange, vendorId, existing }: {
     setComment(existing?.comment ?? "");
   }
 
+  // Drop stale state if the existing review changes (e.g. when navigating
+  // between vendors with the sheet reused).
+  useEffect(() => {
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [existing?.rating, existing?.comment, vendorId]);
+
   async function submit() {
+    if (!session?.user?.id) {
+      toast.error("Please sign in to leave a review.");
+      return;
+    }
     if (!rating) return toast.error("Please select a star rating.");
     if (!comment.trim()) return toast.error("Please write a short review.");
+    if (comment.trim().length > 2000) {
+      return toast.error("Reviews are limited to 2000 characters.");
+    }
     setLoading(true);
     try {
-      await upsert({ userId: "", vendorId, rating, comment: comment.trim() });
+      await upsert({
+        userId: session.user.id,
+        vendorId,
+        rating,
+        comment: comment.trim(),
+      });
       toast.success(existing ? "Review updated!" : "Thanks for your review!");
       onOpenChange(false);
     } catch (e: any) { toast.error(e.message); }

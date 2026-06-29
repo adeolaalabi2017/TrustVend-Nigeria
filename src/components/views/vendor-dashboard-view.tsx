@@ -144,10 +144,10 @@ export function VendorDashboardView() {
   }
 
   const statusBadge = {
-    PENDING: { label: "Pending review", cls: "bg-amber-100 text-amber-700" },
-    APPROVED: { label: "Approved", cls: "bg-emerald-100 text-emerald-700" },
-    SUSPENDED: { label: "Suspended", cls: "bg-rose-100 text-rose-700" },
-    REJECTED: { label: "Rejected", cls: "bg-rose-100 text-rose-700" },
+    PENDING: { label: "Pending review", cls: "bg-warning text-warning-fg" },
+    APPROVED: { label: "Approved", cls: "bg-success text-success-fg" },
+    SUSPENDED: { label: "Suspended", cls: "bg-danger text-danger-fg" },
+    REJECTED: { label: "Rejected", cls: "bg-danger text-danger-fg" },
   }[vendor.status] ?? { label: vendor.status, cls: "" };
 
   const pendingCount = data?.enquiries?.filter((e: any) => false).length ?? 0; // placeholder
@@ -450,7 +450,7 @@ function ProfileTab({ vendor, statusBadge, toggling, onToggle, onEdit }: any) {
                   <h3 className="text-xl font-extrabold">{vendor.businessName}</h3>
                   {vendor.verified && <VerifiedBadge size="md" />}
                   {vendor.featured && (
-                    <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+                    <Badge className="bg-warning text-warning-fg hover:bg-warning">
                       <Sparkles className="h-3 w-3 mr-1" /> Featured
                     </Badge>
                   )}
@@ -516,7 +516,7 @@ function ProfileTab({ vendor, statusBadge, toggling, onToggle, onEdit }: any) {
                   <span
                     className={cn(
                       "grid h-6 w-6 place-items-center rounded-full text-[11px] shrink-0",
-                      reached ? "bg-emerald-100 text-emerald-700" : "bg-muted text-muted-foreground"
+                      reached ? "bg-success text-success-fg" : "bg-muted text-muted-foreground"
                     )}
                   >
                     {reached ? <CheckCircle2 className="h-3.5 w-3.5" /> : i + 1}
@@ -563,9 +563,9 @@ function BookingsTab({ vendorId: _vendorId, userId }: { vendorId: string; userId
   }
 
   const statusCls: Record<string, string> = {
-    PENDING: "bg-amber-100 text-amber-700",
-    CONFIRMED: "bg-emerald-100 text-emerald-700",
-    DECLINED: "bg-rose-100 text-rose-700",
+    PENDING: "bg-warning text-warning-fg",
+    CONFIRMED: "bg-success text-success-fg",
+    DECLINED: "bg-danger text-danger-fg",
     CANCELLED: "bg-muted text-muted-foreground",
   };
 
@@ -877,16 +877,16 @@ function EventsTab({ userId }: { userId: string }) {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   {e.isUpcoming ? (
-                    <Badge className="bg-emerald-100 text-emerald-700">Upcoming</Badge>
+                    <Badge className="bg-success text-success-fg">Upcoming</Badge>
                   ) : (
                     <Badge variant="secondary">Past</Badge>
                   )}
-                  <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => openEdit(e)}>
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button size="icon" variant="ghost" className="h-8 w-8 text-rose-600" onClick={() => setDeleteId(e.id)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+<Button size="icon" variant="ghost" className="h-10 w-10" onClick={() => openEdit(e)}>
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" className="h-10 w-10 text-rose-600" onClick={() => setDeleteId(e.id)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                 </div>
               </div>
             </div>

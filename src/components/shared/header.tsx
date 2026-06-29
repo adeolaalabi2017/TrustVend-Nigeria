@@ -13,7 +13,7 @@ import {
   User,
   ChevronDown,
 } from "lucide-react";
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,11 +35,9 @@ import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 function useMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
 }
 
 function NavLink({

@@ -3,7 +3,7 @@
 import { Bookmark, MapPin, Eye, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,9 +21,16 @@ export function VendorCard({ vendor }: { vendor: TVendorCard }) {
   const { data: session } = useSession();
   const openVendor = useAppStore((s) => s.openVendor);
   const openAuth = useAppStore((s) => s.openAuth);
-  const [bookmarked, setBookmarked] = useState(false);
   const [loading, setLoading] = useState(false);
   const toggleBookmark = useMutation(api.bookmarks.toggle);
+
+  // Seed bookmark state from a single shared query (one round-trip per
+  // page, not per card). Falls back to false for guests or while loading.
+  const myBookmarkIds = useQuery(
+    api.bookmarks.getMyBookmarkSet,
+    session?.user?.id ? { userId: session.user.id } : "skip",
+  );
+  const bookmarked = !!myBookmarkIds?.includes(vendor.id);
 
   const cover = vendor.photos[0] || "/vendors/placeholder.png";
 
@@ -41,7 +48,6 @@ export function VendorCard({ vendor }: { vendor: TVendorCard }) {
     setLoading(true);
     try {
       const res = await toggleBookmark({ userId: session.user.id, vendorId: vendor.id });
-      setBookmarked(res.bookmarked);
       toast.success(res.bookmarked ? "Saved to your list." : "Removed from your list.");
     } catch (err: any) {
       toast.error(err.message);
@@ -83,8 +89,8 @@ export function VendorCard({ vendor }: { vendor: TVendorCard }) {
           disabled={loading}
           aria-label="Bookmark vendor"
           className={cn(
-            "absolute bottom-2 right-2 grid h-9 w-9 place-items-center rounded-full bg-white/90 backdrop-blur text-foreground shadow transition hover:bg-white",
-            bookmarked && "text-emerald-600"
+            "absolute bottom-2 right-2 grid h-10 w-10 place-items-center rounded-full bg-white/90 backdrop-blur text-foreground shadow transition hover:bg-white",
+            bookmarked && "text-success-fg"
           )}
         >
           <Bookmark className={cn("h-4 w-4", bookmarked && "fill-current")} />

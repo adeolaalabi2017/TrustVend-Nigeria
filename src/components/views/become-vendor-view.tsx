@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -202,8 +203,9 @@ export function BecomeVendorView() {
           </div>
 
           <div>
-            <label className="text-sm font-medium block mb-1.5">Business name *</label>
+            <Label htmlFor="bv-bn" className="text-sm font-medium block mb-1.5">Business name *</Label>
             <Input
+              id="bv-bn"
               required
               value={form.businessName}
               onChange={(e) => setForm({ ...form, businessName: e.target.value })}
@@ -212,9 +214,9 @@ export function BecomeVendorView() {
           </div>
 
           <div>
-            <label className="text-sm font-medium block mb-1.5">Category *</label>
+            <Label htmlFor="bv-cat" className="text-sm font-medium block mb-1.5">Category *</Label>
             <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-              <SelectTrigger><SelectValue placeholder="Choose a category" /></SelectTrigger>
+              <SelectTrigger id="bv-cat"><SelectValue placeholder="Choose a category" /></SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
@@ -224,8 +226,9 @@ export function BecomeVendorView() {
           </div>
 
           <div>
-            <label className="text-sm font-medium block mb-1.5">Description *</label>
+            <Label htmlFor="bv-desc" className="text-sm font-medium block mb-1.5">Description *</Label>
             <Textarea
+              id="bv-desc"
               required
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -235,8 +238,9 @@ export function BecomeVendorView() {
           </div>
 
           <div>
-            <label className="text-sm font-medium block mb-1.5">Products / services</label>
+            <Label htmlFor="bv-prod" className="text-sm font-medium block mb-1.5">Products / services</Label>
             <Textarea
+              id="bv-prod"
               value={form.products}
               onChange={(e) => setForm({ ...form, products: e.target.value })}
               placeholder="List your main products or services (one per line)"
@@ -253,9 +257,9 @@ export function BecomeVendorView() {
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium block mb-1.5">State *</label>
+              <Label htmlFor="bv-state" className="text-sm font-medium block mb-1.5">State *</Label>
               <Select value={form.state} onValueChange={(v) => setForm({ ...form, state: v })}>
-                <SelectTrigger><SelectValue placeholder="Choose state" /></SelectTrigger>
+                <SelectTrigger id="bv-state"><SelectValue placeholder="Choose state" /></SelectTrigger>
                 <SelectContent>
                   {NIGERIAN_STATES.map((s) => (
                     <SelectItem key={s} value={s}>{s}</SelectItem>
@@ -264,8 +268,9 @@ export function BecomeVendorView() {
               </Select>
             </div>
             <div>
-              <label className="text-sm font-medium block mb-1.5">City *</label>
+              <Label htmlFor="bv-city" className="text-sm font-medium block mb-1.5">City *</Label>
               <Input
+                id="bv-city"
                 required
                 value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
@@ -282,8 +287,9 @@ export function BecomeVendorView() {
           </div>
 
           <div>
-            <label className="text-sm font-medium block mb-1.5">WhatsApp number</label>
+            <Label htmlFor="bv-wa" className="text-sm font-medium block mb-1.5">WhatsApp number</Label>
             <Input
+              id="bv-wa"
               type="tel"
               value={form.whatsapp}
               onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
@@ -301,8 +307,9 @@ export function BecomeVendorView() {
           </div>
 
           <div>
-            <label className="text-sm font-medium block mb-1.5">Instagram handle *</label>
+            <Label htmlFor="bv-ig" className="text-sm font-medium block mb-1.5">Instagram handle *</Label>
             <Input
+              id="bv-ig"
               required
               value={form.instagramHandle}
               onChange={(e) => setForm({ ...form, instagramHandle: e.target.value })}
@@ -310,8 +317,9 @@ export function BecomeVendorView() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1.5">Instagram profile link (optional)</label>
+            <Label htmlFor="bv-igurl" className="text-sm font-medium block mb-1.5">Instagram profile link (optional)</Label>
             <Input
+              id="bv-igurl"
               type="url"
               value={form.instagramLink}
               onChange={(e) => setForm({ ...form, instagramLink: e.target.value })}
