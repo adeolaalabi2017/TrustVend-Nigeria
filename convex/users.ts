@@ -34,6 +34,8 @@ const ROLE = v.union(
 export const getByEmail = query({
   args: { email: v.string() },
   handler: async (ctx, { email }) => {
+    const limit = rateLimit(`login:${email.toLowerCase()}`, 10, 60_000);
+    if (!limit.ok) throw new ConvexError("Too many login attempts, try again shortly");
     return await getUserByEmail(ctx, email);
   },
 });
@@ -379,15 +381,18 @@ export const adminDeleteUser = mutation({
   },
 });
 
-/** Admin: list all users with their primary vendor (if any). */
+/** Admin: list all users with their primary vendor (if any). Paginated. */
 export const adminList = query({
   args: {
     actorId: v.string(),
     q: v.optional(v.string()),
     role: v.optional(ROLE),
+    limit: v.optional(v.number()),
+    cursor: v.optional(v.string()),
   },
-  handler: async (ctx, { actorId, q, role }) => {
+  handler: async (ctx, { actorId, q, role, limit, cursor }) => {
     await requireUser(ctx, actorId); // role check happens via requireAdmin if needed
+    const PAGE = Math.min(limit ?? 24, 60);
     const all = await ctx.db.query("users").order("desc").collect();
     const filtered = all.filter((u) => {
       if (role && u.role !== role) return false;
@@ -395,15 +400,21 @@ export const adminList = query({
         return false;
       return true;
     });
-    return filtered.map((u) => ({
-      id: u._id,
-      email: u.email,
-      name: u.name ?? null,
-      image: u.image ?? null,
-      role: u.role,
-      banned: u.banned,
-      createdAt: u.createdAt,
-    }));
+    const start = cursor ? Number(cursor) : 0;
+    const page = filtered.slice(start, start + PAGE);
+    return {
+      items: page.map((u) => ({
+        id: u._id,
+        email: u.email,
+        name: u.name ?? null,
+        image: u.image ?? null,
+        role: u.role,
+        banned: u.banned,
+        createdAt: u.createdAt,
+      })),
+      nextCursor: start + PAGE < filtered.length ? String(start + PAGE) : undefined,
+      total: filtered.length,
+    };
   },
 });
 
@@ -415,6 +426,9 @@ export const adminList = query({
 export const verifyCredentials = query({
   args: { email: v.string(), password: v.string() },
   handler: async (ctx, { email, password }) => {
+    const key = `login:${email.toLowerCase()}`;
+    const limit = rateLimit(key, 10, 60_000);
+    if (!limit.ok) throw new ConvexError("Too many login attempts, try again shortly");
     const user = await getUserByEmail(ctx, email);
     if (!user || user.banned) return null;
     const ok = await verifyPassword(password, user.password);

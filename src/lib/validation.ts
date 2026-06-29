@@ -6,7 +6,7 @@ import { z } from "zod";
  */
 
 export const emailSchema = z.string().trim().toLowerCase().email().max(254);
-export const passwordSchema = z.string().min(6).max(128);
+export const passwordSchema = z.string().min(8).max(128);
 export const nameSchema = z.string().trim().min(1).max(100);
 
 export const whatsappSchema = z

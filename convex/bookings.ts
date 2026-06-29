@@ -42,27 +42,64 @@ export const listMine = query({
 export const list = query({
   args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
-    await requireUser(ctx, userId);
-    const myVendors = await ctx.db
-      .query("vendors")
-      .withIndex("by_user", (q) => q.eq("userId", userId as any))
-      .collect();
-    const vendorIds = new Set(myVendors.map((v) => String(v._id)));
-    const all = await ctx.db.query("bookings").order("desc").collect();
-    return all
-      .filter((b) => vendorIds.has(String(b.vendorId)))
-      .map((b) => ({
-        id: b._id,
-        status: b.status,
-        eventType: b.eventType,
-        eventDate: b.eventDate,
-        location: b.location,
-        notes: b.notes ?? null,
-        customerName: b.customerName,
-        customerEmail: b.customerEmail,
-        createdAt: b.createdAt,
-        updatedAt: b.updatedAt,
-      }));
+    const me = await requireUser(ctx, userId);
+    if (me.role === "ADMIN") {
+      const all = await ctx.db.query("bookings").order("desc").collect();
+      return all
+        .map((b) => ({
+          id: b._id,
+          status: b.status,
+          eventType: b.eventType,
+          eventDate: b.eventDate,
+          location: b.location,
+          notes: b.notes ?? null,
+          customerName: b.customerName,
+          customerEmail: b.customerEmail,
+          createdAt: b.createdAt,
+          updatedAt: b.updatedAt,
+        }));
+    }
+    if (me.role === "VENDOR") {
+      const myVendors = await ctx.db
+        .query("vendors")
+        .withIndex("by_user", (q) => q.eq("userId", userId as any))
+        .collect();
+      const vendorIds = new Set(myVendors.map((v) => String(v._id)));
+      const all = await ctx.db.query("bookings").order("desc").collect();
+      return all
+        .filter((b) => vendorIds.has(String(b.vendorId)))
+        .map((b) => ({
+          id: b._id,
+          status: b.status,
+          eventType: b.eventType,
+          eventDate: b.eventDate,
+          location: b.location,
+          notes: b.notes ?? null,
+          customerName: b.customerName,
+          customerEmail: b.customerEmail,
+          createdAt: b.createdAt,
+          updatedAt: b.updatedAt,
+        }));
+    }
+    return await ctx.db
+      .query("bookings")
+      .withIndex("by_customer", (q) => q.eq("customerId", userId as any))
+      .order("desc")
+      .collect()
+      .then((bs) =>
+        bs.map((b) => ({
+          id: b._id,
+          status: b.status,
+          eventType: b.eventType,
+          eventDate: b.eventDate,
+          location: b.location,
+          notes: b.notes ?? null,
+          customerName: b.customerName,
+          customerEmail: b.customerEmail,
+          createdAt: b.createdAt,
+          updatedAt: b.updatedAt,
+        }))
+      );
   },
 });
 

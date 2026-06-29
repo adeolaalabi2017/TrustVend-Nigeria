@@ -409,31 +409,35 @@ export const update = mutation({
   },
 });
 
-/** Record a view, with 30-min per-IP dedupe. */
+/** Record a view, with 30-min per-IP dedupe. IP is optional — when null,
+ * dedupe is skipped (appropriate for unauthenticated public endpoints where
+ * client headers cannot be trusted). */
 export const trackView = mutation({
-  args: { vendorId: v.string(), ip: v.string() },
+  args: { vendorId: v.string(), ip: v.optional(v.string()) },
   handler: async (ctx, { vendorId, ip }) => {
-    const limit = rateLimit(`view:${ip}:${vendorId}`, 10, 60_000);
-    if (!limit.ok) return { ok: false };
-    const now = Date.now();
-    const recent = await ctx.db
-      .query("vendorViews")
-      .withIndex("by_vendor_ip", (q) =>
-        q.eq("vendorId", vendorId as any).eq("ip", ip)
-      )
-      .collect();
-    const last30 = recent.find((r) => now - r.viewedAt < 30 * 60 * 1000);
-    if (last30) return { ok: false };
-    await ctx.db.insert("vendorViews", {
-      vendorId: vendorId as any,
-      ip,
-      viewedAt: now,
-    });
+    if (ip) {
+      const limit = rateLimit(`view:${ip}:${vendorId}`, 10, 60_000);
+      if (!limit.ok) return { ok: false };
+      const now = Date.now();
+      const recent = await ctx.db
+        .query("vendorViews")
+        .withIndex("by_vendor_ip", (q) =>
+          q.eq("vendorId", vendorId as any).eq("ip", ip)
+        )
+        .collect();
+      const last30 = recent.find((r) => now - r.viewedAt < 30 * 60 * 1000);
+      if (last30) return { ok: false };
+      await ctx.db.insert("vendorViews", {
+        vendorId: vendorId as any,
+        ip,
+        viewedAt: now,
+      });
+    }
     const vendor = await getVendorDoc(ctx, vendorId);
     if (vendor) {
       await ctx.db.patch(vendorId as any, {
         views: vendor.views + 1,
-        updatedAt: now,
+        updatedAt: Date.now(),
       });
     }
     return { ok: true };
@@ -572,15 +576,18 @@ export const adminAction = mutation({
   },
 });
 
-/** Admin: list all vendors with their owner's email. */
+/** Admin: list all vendors with their owner's email. Paginated. */
 export const adminList = query({
   args: {
     actorId: v.string(),
     status: v.optional(vendorStatusSchema),
     q: v.optional(v.string()),
+    limit: v.optional(v.number()),
+    cursor: v.optional(v.string()),
   },
-  handler: async (ctx, { actorId, status, q }) => {
+  handler: async (ctx, { actorId, status, q, limit, cursor }) => {
     await requireAdmin(ctx, actorId);
+    const PAGE = Math.min(limit ?? 24, 60);
     const all = await ctx.db.query("vendors").order("desc").collect();
     const filtered = all.filter((v) => {
       if (status && v.status !== status) return false;
@@ -591,8 +598,10 @@ export const adminList = query({
       }
       return true;
     });
-    return await Promise.all(
-      filtered.map(async (v) => {
+    const start = cursor ? Number(cursor) : 0;
+    const page = filtered.slice(start, start + PAGE);
+    const items = await Promise.all(
+      page.map(async (v) => {
         const owner = await ctx.db.get(v.userId);
         return {
           id: v._id,
@@ -614,6 +623,7 @@ export const adminList = query({
         };
       })
     );
+    return { items, nextCursor: start + PAGE < filtered.length ? String(start + PAGE) : undefined, total: filtered.length };
   },
 });
 

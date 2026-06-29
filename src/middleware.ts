@@ -47,7 +47,7 @@ export function middleware(_req: NextRequest) {
       isProd
         ? ""
         : " ws: wss: http: https:"
-    } http://trust-vend-convex-d1fd76-185-209-223-95.sslip.io http://trust-vend-convex-2e9a38-185-209-223-95.sslip.io ws://trust-vend-convex-d1fd76-185-209-223-95.sslip.io ws://trust-vend-convex-2e9a38-185-209-223-95.sslip.io`,
+    }${process.env.NEXT_PUBLIC_CONVEX_URL ? ` ${process.env.NEXT_PUBLIC_CONVEX_URL}` : ""}`,
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",

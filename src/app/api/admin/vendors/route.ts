@@ -11,15 +11,17 @@ export async function GET(req: Request) {
   const status = url.searchParams.get("status") ?? undefined;
   const q = url.searchParams.get("q") ?? undefined;
   try {
-    const vendors = await convexQuery(api.vendors.adminList, {
+    const result = await convexQuery(api.vendors.adminList, {
       actorId,
       status: status as any,
       q,
+      limit: url.searchParams.get("limit") ? Number(url.searchParams.get("limit")) : undefined,
+      cursor: url.searchParams.get("cursor") ?? undefined,
     });
-    return NextResponse.json({ vendors });
+    return NextResponse.json(result);
   } catch (err) {
     return NextResponse.json(
-      { vendors: [], error: err instanceof Error ? err.message : "Failed" },
+      { items: [], error: err instanceof Error ? err.message : "Failed" },
       { status: 500 }
     );
   }

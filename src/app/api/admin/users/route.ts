@@ -9,15 +9,17 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Admin only" }, { status: 403 });
   const url = new URL(req.url);
   try {
-    const users = await convexQuery(api.users.adminList, {
+    const result = await convexQuery(api.users.adminList, {
       actorId,
       q: url.searchParams.get("q") ?? undefined,
       role: (url.searchParams.get("role") ?? undefined) as any,
+      limit: url.searchParams.get("limit") ? Number(url.searchParams.get("limit")) : undefined,
+      cursor: url.searchParams.get("cursor") ?? undefined,
     });
-    return NextResponse.json({ users });
+    return NextResponse.json(result);
   } catch (err) {
     return NextResponse.json(
-      { users: [], error: err instanceof Error ? err.message : "Failed" },
+      { items: [], error: err instanceof Error ? err.message : "Failed" },
       { status: 500 }
     );
   }
