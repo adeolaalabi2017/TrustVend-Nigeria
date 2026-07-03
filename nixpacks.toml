@@ -1,0 +1,11 @@
+[providers]
+node = "20"
+
+[phases.setup]
+nixpkgsArchive = "nodejs_20"
+
+[phases.install]
+cmds = ["bun install --frozen-lockfile"]
+
+[variables]
+NIXPACKS_NODE_VERSION = "20"
