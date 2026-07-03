@@ -3,7 +3,8 @@ import { api, convexMutate, requireAdminUserId } from "@/lib/convex-server";
 
 export const dynamic = "force-dynamic";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const actorId = await requireAdminUserId().catch(() => null);
   if (!actorId)
     return NextResponse.json({ error: "Admin only" }, { status: 403 });

@@ -3,7 +3,8 @@ import { api, convexMutate, convexQuery, requireAdminUserId } from "@/lib/convex
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Try by id first, then by slug.
     let result = await convexQuery(api.posts.getById, { id: params.id });
@@ -19,7 +20,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const actorId = await requireAdminUserId().catch(() => null);
   if (!actorId)
     return NextResponse.json({ error: "Admin only" }, { status: 403 });
@@ -40,7 +42,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const actorId = await requireAdminUserId().catch(() => null);
   if (!actorId)
     return NextResponse.json({ error: "Admin only" }, { status: 403 });

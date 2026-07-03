@@ -3,7 +3,8 @@ import { api, convexMutate, convexQuery, requireUserId } from "@/lib/convex-serv
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const userId = await requireUserId().catch(() => null);
   if (!userId)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });

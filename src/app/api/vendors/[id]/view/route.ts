@@ -3,7 +3,8 @@ import { api, convexMutate } from "@/lib/convex-server";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const result = await convexMutate(api.vendors.trackView, {
       vendorId: params.id,
