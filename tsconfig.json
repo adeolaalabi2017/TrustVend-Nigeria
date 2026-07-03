@@ -34,13 +34,20 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "convex/**/*.ts",
+    "next.config.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "convex"
+    "examples",
+    "e2e",
+    "tests",
+    "test_api.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }
