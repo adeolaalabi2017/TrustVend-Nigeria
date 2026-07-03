@@ -1,9 +1,13 @@
 # Nixpacks build configuration for TrustVend-Nigeria
 # Pins the Node.js runtime to a supported LTS release (Node 20),
 # because Node 18 reached end-of-life and was removed from current nixpkgs.
+#
+# NOTE: In Nixpacks TOML schema, `providers` must be an array of strings,
+# NOT a table. Using a table here (e.g. `[providers]\nnode = "20"`) causes:
+#   "invalid type: map, expected a sequence for key 'providers'"
+# To pin a Node version we use [phases.setup] nixPackages instead.
 
-[providers]
-node = "20"
+providers = ["node"]
 
 [phases.setup]
 nixPackages = ["nodejs_20"]
