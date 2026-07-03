@@ -441,6 +441,27 @@ bun run lint              # ESLint
 bun run typecheck         # tsc --noEmit
 ```
 
+### 10.7 Convex Codegen Workflow
+
+`convex/_generated/` is **tracked in git on purpose** (see [convex/.gitignore](file:///c:/Users/DELL%20LATITUDE%207290/Documents/TV-V2/convex/.gitignore)). This keeps the build pipeline independent of the Convex deployment — the build server has no need to authenticate against Convex or know any URLs/keys.
+
+**When you change anything under `convex/`** (schema, new function file, new file in `convex/auth/`), regenerate the bindings locally and commit the diff:
+
+```bash
+bunx convex codegen
+git add convex/_generated
+git commit -m "chore(convex): regenerate API bindings"
+```
+
+Codegen requires the env vars in `.env.local`:
+
+- `CONVEX_SELF_HOSTED_URL` — the self-hosted Convex backend URL
+- `CONVEX_SELF_HOSTED_ADMIN_KEY` — admin key for the deployment
+
+These are developer-local credentials only; they are never required in CI or in the Dokploy build env.
+
+**Why this matters:** if the diff under `convex/_generated/` is not committed, the Dokploy build will fail at `next build` with `Module not found: Can't resolve 'convex/_generated/api'` even though codegen succeeded locally. The generated files are the source of truth for `src/**` TypeScript imports; they must be in the deployed bundle.
+
 ---
 
 ## 11. Demo Accounts
