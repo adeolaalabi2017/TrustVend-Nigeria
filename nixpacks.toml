@@ -1,11 +1,15 @@
+# Nixpacks build configuration for TrustVend-Nigeria
+# Pins the Node.js runtime to a supported LTS release (Node 20),
+# because Node 18 reached end-of-life and was removed from current nixpkgs.
+
 [providers]
 node = "20"
 
 [phases.setup]
-nixpkgsArchive = "nodejs_20"
+nixPackages = ["nodejs_20"]
 
 [phases.install]
 cmds = ["bun install --frozen-lockfile"]
 
-[variables]
-NIXPACKS_NODE_VERSION = "20"
+[start]
+cmd = "bun run start"
