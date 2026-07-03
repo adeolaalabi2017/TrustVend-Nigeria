@@ -2,15 +2,24 @@
 # Pins the Node.js runtime to a supported LTS release (Node 20),
 # because Node 18 reached end-of-life and was removed from current nixpkgs.
 #
+# The project uses Bun as both package manager AND runtime (see
+# package.json: `bun install`, `bun .next/standalone/server.js`), so
+# `bun` must be installed in the Nix setup phase alongside Node 20 —
+# otherwise the install step fails with `bun: command not found`.
+#
+# NOTE: The Nixpacks schema key is `nixPackages` (camelCase), NOT
+# `nixPkgs`. See the BuildPlan struct in
+# https://github.com/railwayapp/nixpacks/pull/383 — `nix_pkgs` is
+# serde-renamed to `nixPackages`. Using `nixPkgs` is silently ignored.
+#
 # NOTE: In Nixpacks TOML schema, `providers` must be an array of strings,
 # NOT a table. Using a table here (e.g. `[providers]\nnode = "20"`) causes:
 #   "invalid type: map, expected a sequence for key 'providers'"
-# To pin a Node version we use [phases.setup] nixPackages instead.
 
 providers = ["node"]
 
 [phases.setup]
-nixPackages = ["nodejs_20"]
+nixPackages = ["nodejs_20", "bun"]
 
 [phases.install]
 cmds = ["bun install --frozen-lockfile"]
