@@ -122,8 +122,8 @@ export function HomeView() {
                 vendors across Nigeria.
               </h1>
               <p className="text-lg text-muted-foreground max-w-xl">
-                No more scams or guesswork. Discover verified businesses, read
-                real reviews, and connect with confidence — all in one place.
+                Discover Verified Instagram businesses and Vendors - Find real
+                vendors, read reviews and interact with confidence.
               </p>
 
               {/* Search bar */}

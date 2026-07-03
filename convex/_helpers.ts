@@ -493,3 +493,22 @@ export const bookingStatusSchema = v.union(
   v.literal("DECLINED"),
   v.literal("CANCELLED")
 );
+
+// ---------------------------------------------------------------------------
+// Bootstrap (one-time admin escape hatch)
+// ---------------------------------------------------------------------------
+
+/**
+ * Read the optional `BOOTSTRAP_ADMIN_EMAIL` env var (set on the Convex
+ * backend). Used by:
+ *   - `users.register` — auto-promotes a fresh signup matching the email
+ *   - `users.bootstrapPromoteSelf` — promotes an already-registered
+ *     sign-in matching the email to ADMIN role
+ *
+ * Intentionally safe to leave set: after the matching account becomes
+ * ADMIN, subsequent calls are no-ops. Remove the env var from the
+ * Convex backend once your admin account exists.
+ */
+export function getBootstrapAdminEmail(): string {
+  return (process.env.BOOTSTRAP_ADMIN_EMAIL ?? "").toLowerCase().trim();
+}

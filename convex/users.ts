@@ -10,6 +10,7 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import {
+  getBootstrapAdminEmail,
   getUserByEmail,
   getUserDoc,
   hashPassword,
@@ -117,11 +118,22 @@ export const register = mutation({
     const now = Date.now();
     const passwordHash = await hashPassword(args.password);
 
+    // ----- Bootstrap: honor BOOTSTRAP_ADMIN_EMAIL ------------------------
+    // If the env var is set and a registration's email matches, force
+    // the role to ADMIN regardless of the client-supplied role. This
+    // is the only server-controlled escape hatch for creating the first
+    // admin on a fresh deployment.
+    let resolvedRole: "CUSTOMER" | "VENDOR" | "ADMIN" =
+      args.role ?? (args.signupKind === "vendor" ? "VENDOR" : "CUSTOMER");
+    if (BOOTSTRAP_ADMIN_EMAIL() && email === BOOTSTRAP_ADMIN_EMAIL()) {
+      resolvedRole = "ADMIN";
+    }
+
     const userId = await ctx.db.insert("users", {
       email,
       name: args.name.trim(),
       image: undefined,
-      role: args.role ?? (args.signupKind === "vendor" ? "VENDOR" : "CUSTOMER"),
+      role: resolvedRole,
       password: passwordHash,
       banned: false,
       createdAt: now,
@@ -489,5 +501,60 @@ export const getMe = query({
           }
         : null,
     };
+  },
+});
+
+/**
+ * One-shot bootstrap escape hatch for promoting an already-registered
+ * account to ADMIN role. Used when the BOOTSTRAP_ADMIN_EMAIL env var
+ * is set on the Convex backend, and a matching account was created
+ * BEFORE the bootstrap env var was wired up (so `register` never
+ * auto-promoted it).
+ *
+ * The caller passes their own userId (e.g. from NextAuth `useSession`)
+ * AND their email. The server confirms:
+ *   1. A user with that ID exists
+ *   2. That user's email matches BOOTSTRAP_ADMIN_EMAIL
+ *   3. The env var is set
+ *   4. The user is not already ADMIN (idempotent)
+ *
+ * Returns `{ ok: true, promoted: boolean }`. After the first successful
+ * call, the env var can be safely removed from the Convex backend.
+ */
+export const bootstrapPromoteSelf = mutation({
+  args: {
+    userId: v.string(),
+    email: v.string(),
+  },
+  handler: async (ctx, { userId, email }) => {
+    const target = getBootstrapAdminEmail();
+    if (!target) throw new ConvexError("BOOTSTRAP_ADMIN_EMAIL not configured");
+    if (email.toLowerCase().trim() !== target) {
+      throw new ConvexError("Email does not match BOOTSTRAP_ADMIN_EMAIL");
+    }
+
+    const user = await getUserDoc(ctx, userId);
+    if (!user) throw new ConvexError("User not found");
+    if (user.email.toLowerCase().trim() !== target) {
+      throw new ConvexError("User email does not match BOOTSTRAP_ADMIN_EMAIL");
+    }
+    if (user.role === "ADMIN") {
+      return { ok: true, promoted: false };
+    }
+
+    const now = Date.now();
+    await ctx.db.patch(userId as any, { role: "ADMIN", updatedAt: now });
+
+    await ctx.db.insert("auditLog", {
+      actorId: userId as any,
+      action: "ADMIN_PROMOTE_BOOTSTRAP",
+      targetType: "users",
+      targetId: userId as any,
+      before: { role: user.role },
+      after: { role: "ADMIN", via: "BOOTSTRAP_ADMIN_EMAIL env var" },
+      at: now,
+    });
+
+    return { ok: true, promoted: true };
   },
 });
