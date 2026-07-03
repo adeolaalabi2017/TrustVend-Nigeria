@@ -125,7 +125,7 @@ export const register = mutation({
     // admin on a fresh deployment.
     let resolvedRole: "CUSTOMER" | "VENDOR" | "ADMIN" =
       args.role ?? (args.signupKind === "vendor" ? "VENDOR" : "CUSTOMER");
-    if (BOOTSTRAP_ADMIN_EMAIL() && email === BOOTSTRAP_ADMIN_EMAIL()) {
+    if (getBootstrapAdminEmail() && email === getBootstrapAdminEmail()) {
       resolvedRole = "ADMIN";
     }
 
