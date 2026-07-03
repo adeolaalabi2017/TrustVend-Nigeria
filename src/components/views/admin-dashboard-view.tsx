@@ -34,6 +34,8 @@ import {
   Newspaper,
   Plus,
   Pencil,
+  Database,
+  Wand2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -101,6 +103,7 @@ export function AdminDashboardView() {
   const { data: session } = useSession();
   const { openAuth, openVendor } = useAppStore();
   const [acting, setActing] = useState<string | null>(null);
+  const [seeding, setSeeding] = useState(false);
   const [tab, setTab] = useState("overview");
   const actorId = session?.user?.id ?? "";
 
@@ -159,6 +162,32 @@ export function AdminDashboardView() {
     }
   }
 
+  async function handleSeedSamples() {
+    if (seeding) return;
+    if (!window.confirm(
+      "Insert/refresh 10 sample vendors across 7 categories? This is safe to re-run — rows are matched by slug."
+    )) {
+      return;
+    }
+    setSeeding(true);
+    try {
+      const r = await fetch("/api/admin/seed-vendors", { method: "POST" });
+      const data = await r.json();
+      if (!r.ok || !data.ok) {
+        throw new Error(data.error || "Seed failed");
+      }
+      toast.success(
+        `Seeded ${data.total} vendors — ${data.created} created, ${data.updated} updated.`
+      );
+      // Refresh stats so the overview reflects the new data immediately.
+      // Queries will auto-refresh via Convex reactive subscriptions.
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSeeding(false);
+    }
+  }
+
   return (
     <DashboardShell
       navItems={navItems}
@@ -176,6 +205,8 @@ export function AdminDashboardView() {
           statsLoading={statsData === undefined}
           onGoApprovals={() => setTab("approvals")}
           onOpenVendor={openVendor}
+          onSeedSamples={handleSeedSamples}
+          seeding={seeding}
         />
       )}
 
@@ -218,6 +249,8 @@ function OverviewTab({
   statsLoading,
   onGoApprovals,
   onOpenVendor,
+  onSeedSamples,
+  seeding,
 }: any) {
   if (statsLoading || !statsData) {
     return (
@@ -274,6 +307,54 @@ function OverviewTab({
           icon={BadgeCheck}
         />
       </div>
+
+      {/* Sample-data bootstrap — visible always; re-runnable to refresh */}
+      <PanelCard
+        title="Sample vendor pack"
+        subtitle="Insert or refresh 10 pre-verified vendors across Fashion, Food, Beauty, Photography, Events, Home, and Tech."
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 justify-between">
+          <div className="flex items-start gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-lg bg-emerald-50 text-emerald-700">
+              <Database className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold">
+                {t.vendors === 0
+                  ? "Your marketplace is empty"
+                  : `${t.vendors} vendors already live`}
+              </p>
+              <p className="text-xs text-muted-foreground max-w-md">
+                Idempotent — re-running refreshes the same rows. Featured
+                listings get a 30-day featured period. Synthetic login
+                pattern:
+                <code className="mx-1 rounded bg-muted px-1.5 py-0.5 text-[11px]">{`{handle}@trustvend-demo.ng`}</code>
+                / <code className="rounded bg-muted px-1.5 py-0.5 text-[11px]">VendorPass123!</code>
+              </p>
+            </div>
+          </div>
+          <Button
+            onClick={onSeedSamples}
+            disabled={seeding}
+            className="shrink-0"
+            size="sm"
+          >
+            {seeding ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Seeding…
+              </>
+            ) : (
+              <>
+                <Wand2 className="h-4 w-4 mr-2" />
+                {t.vendors === 0
+                  ? "Seed sample vendors"
+                  : "Refresh sample vendors"}
+              </>
+            )}
+          </Button>
+        </div>
+      </PanelCard>
 
       {/* Charts */}
       <div className="grid lg:grid-cols-5 gap-4">
