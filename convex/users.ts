@@ -10,6 +10,7 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import {
+  audit,
   getBootstrapAdminEmail,
   getUserByEmail,
   getUserDoc,
@@ -545,14 +546,15 @@ export const bootstrapPromoteSelf = mutation({
     const now = Date.now();
     await ctx.db.patch(userId as any, { role: "ADMIN", updatedAt: now });
 
-    await ctx.db.insert("auditLog", {
-      actorId: userId as any,
+    await audit(ctx, {
+      actorId: userId,
       action: "ADMIN_PROMOTE_BOOTSTRAP",
       targetType: "users",
-      targetId: userId as any,
-      before: { role: user.role },
-      after: { role: "ADMIN", via: "BOOTSTRAP_ADMIN_EMAIL env var" },
-      at: now,
+      targetId: userId,
+      detail: JSON.stringify({
+        before: { role: user.role },
+        after: { role: "ADMIN", via: "BOOTSTRAP_ADMIN_EMAIL env var" },
+      }),
     });
 
     return { ok: true, promoted: true };

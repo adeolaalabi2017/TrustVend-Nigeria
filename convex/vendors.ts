@@ -988,18 +988,16 @@ export const seedSamples = mutation({
       }
     }
 
-    await ctx.db.insert("auditLog", {
-      actorId: actorId as any,
+    await audit(ctx, {
+      actorId: actorId,
       action: "SEED_VENDORS",
       targetType: "vendors",
-      targetId: "bulk" as any,
-      before: undefined,
-      after: {
+      targetId: "bulk",
+      detail: JSON.stringify({
         created,
         updated,
         count: SAMPLE_VENDORS.length,
-      },
-      at: now,
+      }),
     });
 
     return { created, updated, total: SAMPLE_VENDORS.length };
