@@ -15,6 +15,18 @@
 # NOTE: In Nixpacks TOML schema, `providers` must be an array of strings,
 # NOT a table. Using a table here (e.g. `[providers]\nnode = "20"`) causes:
 #   "invalid type: map, expected a sequence for key 'providers'"
+#
+# --- Convex codegen workaround -----------------------------------------------
+# `convex codegen` aborts on CI/build environments with
+#   "No CONVEX_DEPLOYMENT set, run `npx convex dev` to configure a Convex project"
+# even though codegen never actually contacts a deployment — it's pure
+# local TypeScript emission from convex/schema.ts. The project uses a
+# self-hosted Convex backend, so the CLI looks for
+# CONVEX_SELF_HOSTED_URL + CONVEX_SELF_HOSTED_ADMIN_KEY instead of
+# CONVEX_DEPLOYMENT. The build container has none of these set, so we
+# inline inert placeholders on the build command itself. These do NOT
+# leak to the runtime container; real values come from the Dokploy env
+# config at runtime.
 
 providers = ["node"]
 
@@ -23,6 +35,11 @@ nixPackages = ["nodejs_20", "bun"]
 
 [phases.install]
 cmds = ["bun install --frozen-lockfile"]
+
+[phases.build]
+cmds = [
+  "CONVEX_SELF_HOSTED_URL=http://build-time-placeholder.invalid CONVEX_SELF_HOSTED_ADMIN_KEY=build-time-placeholder-key bun run build",
+]
 
 [start]
 cmd = "bun run start"
