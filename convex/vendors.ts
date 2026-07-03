@@ -20,6 +20,7 @@ import { mutation, query } from "./_generated/server";
 import {
   audit,
   getVendorDoc,
+  hashPassword,
   notify,
   notifyVendorOwner,
   paginationArgs,
@@ -653,5 +654,354 @@ export const sweepExpiredFeatured = mutation({
       }
     }
     return { cleared };
+  },
+});
+
+// ===========================================================================
+// SAMPLE SEED DATA — used to bootstrap the marketplace on a fresh
+// deployment so the home page isn't empty. Idempotent: re-running upserts
+// the same rows (matched on `slug`).
+//
+// All vendors are created with `status: APPROVED`, `verified: true`, and
+// `verificationStage: COMPLETED`, so they appear in every public listing
+// immediately. One vendor per category is `featured: true`.
+//
+// Synthetic login creds follow the pattern:
+//    handle @trustvend-demo.ng
+//    password  VendorPass123!
+//
+// ===========================================================================
+
+const SAMPLE_VENDORS: Array<{
+  handle: string;
+  name: string;
+  businessName: string;
+  category: string;
+  description: string;
+  products: string;
+  city: string;
+  state: string;
+  whatsapp: string;
+  photos: string[];
+  ratingAvg: number;
+  ratingCount: number;
+  views: number;
+  featured: boolean;
+}> = [
+  {
+    handle: "aunty_ada",
+    name: "Ada Okeke",
+    businessName: "Aunty Ada's Ankara Couture",
+    category: "Fashion",
+    description:
+      "Bespoke Ankara outfits for women — weddings, owambes, and corporate events. Hand-stitched in Lagos, shipped nationwide.",
+    products:
+      "Ankara gowns · Two-piece sets · Aso-ebi bundles · Men's senator wear",
+    city: "Lagos",
+    state: "Lagos",
+    whatsapp: "+2348012340001",
+    photos: [
+      "https://images.unsplash.com/photo-1551803091-e20673f15770?w=800",
+      "https://images.unsplash.com/photo-1566479179817-c0a5b9c2d10f?w=800",
+    ],
+    ratingAvg: 4.8,
+    ratingCount: 142,
+    views: 3420,
+    featured: true,
+  },
+  {
+    handle: "lagos_cuisine",
+    name: "Tunde Bakare",
+    businessName: "Lagos Cuisine by Chef Tunde",
+    category: "Food",
+    description:
+      "Small-chops, jollof rice platters, and asun boxes delivered across Lagos. Pre-order 24h ahead, minimum order ₦15k.",
+    products:
+      "Jollof rice (per pan) · Small chops platters · Asun · Puff-puff buckets",
+    city: "Lagos",
+    state: "Lagos",
+    whatsapp: "+2348012340002",
+    photos: [
+      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800",
+    ],
+    ratingAvg: 4.9,
+    ratingCount: 98,
+    views: 2110,
+    featured: true,
+  },
+  {
+    handle: "glow_by_sade",
+    name: "Sade Ibrahim",
+    businessName: "Glow by Sade Beauty",
+    category: "Beauty",
+    description:
+      "Lash extensions, microblading, and bridal makeup. Home service available across Abuja, with a studio in Wuse.",
+    products:
+      "Classic lashes · Volume lashes · Microblading · Bridal glam",
+    city: "Abuja",
+    state: "FCT",
+    whatsapp: "+2348012340003",
+    photos: [
+      "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800",
+    ],
+    ratingAvg: 4.7,
+    ratingCount: 211,
+    views: 4880,
+    featured: true,
+  },
+  {
+    handle: "frames_by_kunle",
+    name: "Kunle Adebayo",
+    businessName: "Frames by Kunle Photography",
+    category: "Photography",
+    description:
+      "Lifestyle and product photography for Instagram brands. Studio in Surulere, mobile setup available for events.",
+    products:
+      "Product shoots · Brand lifestyle · Event coverage · Studio rental",
+    city: "Lagos",
+    state: "Lagos",
+    whatsapp: "+2348012340004",
+    photos: [
+      "https://images.unsplash.com/photo-1554080353-a576cf803bda?w=800",
+    ],
+    ratingAvg: 4.6,
+    ratingCount: 73,
+    views: 1890,
+    featured: false,
+  },
+  {
+    handle: "nke_events",
+    name: "Nkechi Eze",
+    businessName: "Nke Events Décor",
+    category: "Events",
+    description:
+      "Wedding and event décor — full setup, rentals, and on-day coordination. Covering Enugu, Ogun, and Lagos.",
+    products:
+      "Wedding full setup · Birthday themes · Stage backdrops · Table rentals",
+    city: "Enugu",
+    state: "Enugu",
+    whatsapp: "+2348012340005",
+    photos: [
+      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800",
+    ],
+    ratingAvg: 4.9,
+    ratingCount: 167,
+    views: 3990,
+    featured: true,
+  },
+  {
+    handle: "zaza_baking",
+    name: "Zainab Hassan",
+    businessName: "Zaza's Bakery",
+    category: "Food",
+    description:
+      "Celebration cakes, cupcakes, and dessert tables. Lead time 3 days for custom cakes. Free delivery within Ibadan.",
+    products:
+      "Custom cakes · Cupcake towers · Doughnuts · Dessert table setups",
+    city: "Ibadan",
+    state: "Oyo",
+    whatsapp: "+2348012340006",
+    photos: [
+      "https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=800",
+    ],
+    ratingAvg: 4.8,
+    ratingCount: 122,
+    views: 2740,
+    featured: false,
+  },
+  {
+    handle: "knot_by_ife",
+    name: "Ifeoma Okafor",
+    businessName: "Knot by Ife — Hair Studio",
+    category: "Beauty",
+    description:
+      "Protective styles, knotless braids, and wig installs. Walk-ins welcome Tue–Sat, studio in Lekki Phase 1.",
+    products:
+      "Knotless braids · Boho braids · Frontal installs · Wig revamp",
+    city: "Lagos",
+    state: "Lagos",
+    whatsapp: "+2348012340007",
+    photos: [
+      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800",
+    ],
+    ratingAvg: 4.5,
+    ratingCount: 89,
+    views: 1620,
+    featured: false,
+  },
+  {
+    handle: "benjis_tees",
+    name: "Benjamin Akin",
+    businessName: "Benji's Print Tees",
+    category: "Fashion",
+    description:
+      "Custom-printed t-shirts, hoodies, and totes. 5-piece minimum order, 5-day turnaround. Bulk discounts for corporate.",
+    products:
+      "Custom tees · Hoodies · Tote bags · Caps · Jersey sets",
+    city: "Port Harcourt",
+    state: "Rivers",
+    whatsapp: "+2348012340008",
+    photos: [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800",
+    ],
+    ratingAvg: 4.4,
+    ratingCount: 56,
+    views: 1340,
+    featured: false,
+  },
+  {
+    handle: "plantfix_ng",
+    name: "Chiamaka Eze",
+    businessName: "PlantFix NG",
+    category: "Home & Lifestyle",
+    description:
+      "Indoor plants, succulents, and home décor. Same-day delivery in Lagos mainland, 2-day to other states.",
+    products:
+      "Indoor plants · Succulent arrangements · Plant pots · Soil & fertilizer",
+    city: "Lagos",
+    state: "Lagos",
+    whatsapp: "+2348012340009",
+    photos: [
+      "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800",
+    ],
+    ratingAvg: 4.7,
+    ratingCount: 41,
+    views: 980,
+    featured: false,
+  },
+  {
+    handle: "tmb_studios",
+    name: "Tobi Mbeki",
+    businessName: "TMB Studios — Web & Brand",
+    category: "Tech",
+    description:
+      "Small-business websites, Instagram branding kits, and copy. 2-week delivery for landing pages, 4 weeks for full sites.",
+    products:
+      "Landing pages · 5-page sites · Brand kits · Instagram templates",
+    city: "Lagos",
+    state: "Lagos",
+    whatsapp: "+2348012340010",
+    photos: [
+      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800",
+    ],
+    ratingAvg: 4.9,
+    ratingCount: 32,
+    views: 720,
+    featured: false,
+  },
+];
+
+const DEMO_PASSWORD = "VendorPass123!";
+
+/**
+ * Admin-only: idempotently seed the marketplace with sample vendors.
+ * Re-runnable — each vendor is matched on `slug` and updated in place.
+ *
+ * Each sample vendor gets a synthetic user account with the
+ * `role: "VENDOR"`. Login creds follow:
+ *   email:    {handle}@trustvend-demo.ng
+ *   password: VendorPass123!
+ *
+ * Returns `{ created: number, updated: number }`.
+ */
+export const seedSamples = mutation({
+  args: {
+    actorId: v.string(),
+  },
+  handler: async (ctx, { actorId }) => {
+    await requireAdmin(ctx, actorId);
+
+    const now = Date.now();
+    const passwordHash = await hashPassword(DEMO_PASSWORD);
+
+    let created = 0;
+    let updated = 0;
+    const userMap: Record<string, any> = {};
+
+    for (const v of SAMPLE_VENDORS) {
+      // 1. Upsert the user account.
+      const email = `${v.handle}@trustvend-demo.ng`;
+      let userId = userMap[email];
+      if (!userId) {
+        const existing = await ctx.db
+          .query("users")
+          .withIndex("by_email", (q) => q.eq("email", email))
+          .first();
+        if (existing) {
+          userId = existing._id;
+        } else {
+          userId = await ctx.db.insert("users", {
+            email,
+            name: v.name,
+            image: undefined,
+            role: "VENDOR",
+            password: passwordHash,
+            banned: false,
+            createdAt: now,
+            updatedAt: now,
+          });
+          created += 1;
+        }
+        userMap[email] = userId;
+      }
+
+      // 2. Upsert the vendor row (matched on slug).
+      const slug = await uniqueSlug(ctx, "vendors", v.businessName);
+      const existingVendor = await ctx.db
+        .query("vendors")
+        .withIndex("by_slug", (q) => q.eq("slug", slug))
+        .first();
+
+      const vendorData = {
+        userId,
+        slug,
+        businessName: v.businessName,
+        category: v.category,
+        description: v.description,
+        products: v.products,
+        city: v.city,
+        state: v.state,
+        instagramHandle: v.handle,
+        instagramUrl: `https://instagram.com/${v.handle}`,
+        whatsappNumber: v.whatsapp,
+        photos: v.photos,
+        status: "APPROVED" as const,
+        verified: true,
+        verificationStage: "COMPLETED" as const,
+        featured: v.featured,
+        featuredUntil: v.featured ? now + 30 * 24 * 60 * 60 * 1000 : undefined,
+        ratingAvg: v.ratingAvg,
+        ratingCount: v.ratingCount,
+        views: v.views,
+        availableNote: undefined,
+        rejectionReason: undefined,
+        verifiedAt: now,
+        updatedAt: now,
+      };
+
+      if (existingVendor) {
+        await ctx.db.patch(existingVendor._id, vendorData);
+        updated += 1;
+      } else {
+        await ctx.db.insert("vendors", { ...vendorData, createdAt: now });
+        created += 1;
+      }
+    }
+
+    await ctx.db.insert("auditLog", {
+      actorId: actorId as any,
+      action: "SEED_VENDORS",
+      targetType: "vendors",
+      targetId: "bulk" as any,
+      before: undefined,
+      after: {
+        created,
+        updated,
+        count: SAMPLE_VENDORS.length,
+      },
+      at: now,
+    });
+
+    return { created, updated, total: SAMPLE_VENDORS.length };
   },
 });
