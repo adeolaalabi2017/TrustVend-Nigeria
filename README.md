@@ -36,7 +36,7 @@ A full-stack marketplace that helps Nigerians discover, verify, and engage with 
 | Layer            | Choice                                                      |
 |------------------|-------------------------------------------------------------|
 | Framework        | Next.js 16 (App Router, Turbopack)                          |
-| UI               | React 19, Tailwind CSS v4, shadcn/ui, Radix                 |
+| UI               | React 19, Tailwind CSS v4, shadcn/ui, Radix, **Plus Jakarta Sans** (display + body) |
 | Realtime DB      | [Convex](https://convex.dev) 1.42 (self-hosted)             |
 | Auth             | NextAuth (JWT) + Convex auth helpers                        |
 | Password hashing | Web Crypto **PBKDF2** (Edge-compatible, no bcrypt)          |

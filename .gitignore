@@ -55,6 +55,11 @@ tool-results/
 upload/pasted_image_*.png
 worklog.md
 worklogs/
+
+# Allow committed AI/IDE memories but ignore the rest of the .trae folder
+# (the .trae/preferences.md file at the root is intentionally committed)
+.trae/*
+!.trae/preferences.md
 prompt
 
 server.log
