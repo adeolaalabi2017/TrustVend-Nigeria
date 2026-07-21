@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none" role="img" aria-label="TrustVend social template — event">
+  <title>TrustVend — social template (event)</title>
+  <defs>
+    <linearGradient id="tv-bg-evt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFAF7"/>
+      <stop offset="100%" stop-color="#F1F5F1"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="630" fill="url(#tv-bg-evt)"/>
+
+  <g transform="translate(80,90)" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <text id="kicker" x="0" y="0" font-size="14" font-weight="700" fill="#10B981" letter-spacing="3" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">EVENT · TRUSTVEND NG</text>
+
+    <text id="headline" x="0" y="100" font-size="92" font-weight="800" fill="#0F2A22" letter-spacing="-2">Lagos Made</text>
+    <text id="headline-2" x="0" y="200" font-size="92" font-weight="800" fill="#0F2A22" letter-spacing="-2">Market Week.</text>
+
+    <text id="subhead" x="0" y="262" font-size="22" font-weight="500" fill="#0F2A22" opacity="0.65" letter-spacing="0.4">A week-long showcase of verified Nigerian vendors.</text>
+  </g>
+
+  <!-- Date block -->
+  <g transform="translate(80,420)" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <rect x="0" y="0" width="220" height="100" rx="14" fill="#0F2A22"/>
+    <text id="date-day" x="20" y="40" font-size="14" font-weight="700" fill="#FBBF24" letter-spacing="3" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">DD</text>
+    <text id="date-month" x="20" y="76" font-size="32" font-weight="800" fill="#FAF8F2" letter-spacing="-0.5">MMM</text>
+    <line x1="120" y1="20" x2="120" y2="80" stroke="#FAF8F2" opacity="0.3" stroke-width="1"/>
+    <text id="date-year" x="138" y="40" font-size="14" font-weight="700" fill="#FAF8F2" opacity="0.7" letter-spacing="2.5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">YYYY</text>
+    <text id="date-time" x="138" y="68" font-size="18" font-weight="600" fill="#FAF8F2" letter-spacing="0">12:00 PM</text>
+    <text id="date-place" x="138" y="86" font-size="13" font-weight="500" fill="#FAF8F2" opacity="0.7">Lagos</text>
+  </g>
+
+  <!-- RSVP pill -->
+  <g transform="translate(340,420)">
+    <rect x="0" y="0" width="160" height="50" rx="25" fill="#FBBF24"/>
+    <text id="rsvp" x="80" y="32" text-anchor="middle" font-size="16" font-weight="800" fill="#0F2A22" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" letter-spacing="0.6">RSVP →</text>
+  </g>
+
+  <!-- Decorative shield + verified -->
+  <g transform="translate(900,170)">
+    <rect x="0" y="0" width="180" height="180" rx="40" fill="#0F2A22"/>
+    <g transform="translate(38,38)">
+      <rect x="0" y="0" width="104" height="104" rx="22" fill="#FAF8F2"/>
+      <path d="M26 38 H78" stroke="#0F2A22" stroke-width="9" stroke-linecap="round"/>
+      <path d="M30 52 L52 76 L74 52" stroke="#0F2A22" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M70 30 L78 38 L66 50" stroke="#FBBF24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+
+  <g transform="translate(80,580)" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <text id="url" x="0" y="0" font-size="13" font-weight="600" fill="#0F2A22" opacity="0.55" letter-spacing="2.5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">TRUSTVEND.NG/EVENTS</text>
+  </g>
+</svg>

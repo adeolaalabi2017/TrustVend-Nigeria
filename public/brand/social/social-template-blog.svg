@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none" role="img" aria-label="TrustVend social template — blog">
+  <title>TrustVend — social template (blog)</title>
+  <defs>
+    <linearGradient id="tv-bg-blog" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFAF7"/>
+      <stop offset="100%" stop-color="#F1F5F1"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="630" fill="url(#tv-bg-blog)"/>
+
+  <!-- top emerald stripe -->
+  <rect x="0" y="0" width="1200" height="56" fill="#0F2A22"/>
+  <text x="80" y="36" font-size="14" font-weight="700" fill="#FBBF24" letter-spacing="3" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">JOURNAL · TRUSTVEND NG</text>
+  <text id="category-strip" x="1120" y="36" text-anchor="end" font-size="14" font-weight="600" fill="#FAF8F2" opacity="0.7" letter-spacing="2.5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">CATEGORY</text>
+
+  <g transform="translate(80,160)" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <text id="kicker" x="0" y="0" font-size="14" font-weight="700" fill="#10B981" letter-spacing="3" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">FROM THE JOURNAL</text>
+
+    <text id="headline" x="0" y="100" font-size="78" font-weight="800" fill="#0F2A22" letter-spacing="-1.6">How to vet</text>
+    <text id="headline-2" x="0" y="190" font-size="78" font-weight="800" fill="#0F2A22" letter-spacing="-1.6">an Instagram vendor</text>
+    <text id="headline-3" x="0" y="280" font-size="78" font-weight="800" fill="#10B981" letter-spacing="-1.6">in Nigeria.</text>
+
+    <text id="subhead" x="0" y="346" font-size="22" font-weight="500" fill="#0F2A22" opacity="0.65" letter-spacing="0.4">A practical checklist from the TrustVend editorial desk.</text>
+
+    <g transform="translate(0,420)">
+      <rect x="0" y="0" width="14" height="14" rx="3" fill="#10B981"/>
+      <text x="26" y="12" font-size="14" font-weight="700" fill="#0F2A22" opacity="0.75" letter-spacing="2.5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">READ · 6 MIN</text>
+    </g>
+  </g>
+
+  <g transform="translate(820,200)">
+    <rect x="0" y="0" width="280" height="320" rx="22" fill="#0F2A22"/>
+    <g transform="translate(70,40)">
+      <rect x="0" y="0" width="140" height="140" rx="32" fill="#FAF8F2"/>
+      <path d="M36 50 H104" stroke="#0F2A22" stroke-width="11" stroke-linecap="round"/>
+      <path d="M40 70 L70 104 L100 70" stroke="#0F2A22" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M96 38 L104 46 L94 56" stroke="#FBBF24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <rect id="cover-bar" x="20" y="220" width="180" height="6" rx="3" fill="#FAF8F2" opacity="0.4"/>
+    <rect x="20" y="234" width="120" height="6" rx="3" fill="#FAF8F2" opacity="0.4"/>
+  </g>
+
+  <g transform="translate(80,580)" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <text id="url" x="0" y="0" font-size="13" font-weight="600" fill="#0F2A22" opacity="0.55" letter-spacing="2.5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">TRUSTVEND.NG/JOURNAL</text>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" role="img" aria-label="TrustVend">
+  <title>TrustVend PWA icon 512</title>
+  <rect x="0" y="0" width="512" height="512" fill="#0F2A22"/>
+  <g transform="translate(150,150)">
+    <rect x="0" y="0" width="212" height="212" rx="46" fill="#0F2A22" stroke="#34D399" stroke-width="3" opacity="0.4"/>
+    <path d="M42 74 H170" stroke="#ECFDF5" stroke-width="18" stroke-linecap="round"/>
+    <path d="M48 96 L106 158 L164 96" stroke="#ECFDF5" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M154 48 L170 64 L142 92" stroke="#FBBF24" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+</svg>

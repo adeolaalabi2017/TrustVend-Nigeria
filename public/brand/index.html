@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrustVend Nigeria — Brand Kit</title>
+  <meta name="description" content="TrustVend Nigeria brand identity kit — logo, color, typography, favicon, app icons, category icons, empty states, social templates.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+  <style>
+    :root {
+      --brand-emerald-50:  #ECFDF5;
+      --brand-emerald-300: #6EE7B7;
+      --brand-emerald-500: #10B981;
+      --brand-emerald-700: #047857;
+      --brand-amber-300:   #FCD34D;
+      --brand-amber-500:   #FBBF24;
+      --brand-amber-700:   #B45309;
+      --brand-ink-900:     #0F2A22;
+      --brand-ink-700:     #1F3A33;
+      --brand-ink-600:     #475569;
+      --brand-ink-400:     #94A3B8;
+      --brand-paper-50:    #FAFAF7;
+      --brand-paper-100:   #F1F5F1;
+      --brand-paper-200:   #E5EBE5;
+    }
+
+    html[data-theme="light"] {
+      --bg: var(--brand-paper-50);
+      --bg-alt: var(--brand-paper-100);
+      --fg: var(--brand-ink-900);
+      --fg-soft: var(--brand-ink-600);
+      --fg-muted: var(--brand-ink-400);
+      --line: var(--brand-paper-200);
+      --card: #FFFFFF;
+      --card-fg: var(--brand-ink-900);
+      --hero-bg: var(--brand-ink-900);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0B1F18;
+      --bg-alt: #0F2A22;
+      --fg: #F1F5F1;
+      --fg-soft: #B8C5BF;
+      --fg-muted: #6E8079;
+      --line: #1F3A33;
+      --card: #122E25;
+      --card-fg: #F1F5F1;
+      --hero-bg: #061310;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body { line-height: 1.55; }
+
+    h1, h2, h3, h4 {
+      font-family: inherit;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); font-weight: 800; line-height: 1.02; }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; line-height: 1.1; }
+    h3 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
+    p  { margin: 0; color: var(--fg-soft); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    @media (max-width: 720px) {
+      .container { padding: 0 20px; }
+    }
+
+    /* ---------- Top nav ---------- */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: saturate(180%) blur(10px);
+      -webkit-backdrop-filter: saturate(180%) blur(10px);
+      background: color-mix(in oklab, var(--bg) 80%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-brand img { width: 32px; height: 32px; display: block; }
+    .nav-brand .name { font-weight: 800; font-size: 16px; }
+    .nav-brand .sub  { font-size: 10px; color: var(--fg-muted); letter-spacing: 2px; font-weight: 600; }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .nav-actions a {
+      font-size: 13px;
+      color: var(--fg-soft);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .nav-actions a:hover { color: var(--fg); background: var(--bg-alt); }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--card-fg);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--brand-emerald-500); color: var(--brand-emerald-700); }
+    html[data-theme="dark"] .btn { background: var(--card); border-color: var(--line); color: var(--card-fg); }
+
+    /* ---------- Sections ---------- */
+    section {
+      padding: 96px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    section:last-of-type { border-bottom: 0; }
+    .section-header {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-bottom: 48px;
+      max-width: 720px;
+    }
+    .kicker {
+      font-size: 12px; font-weight: 700; letter-spacing: 2.5px;
+      color: var(--brand-emerald-700);
+      text-transform: uppercase;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    html[data-theme="dark"] .kicker { color: var(--brand-emerald-300); }
+
+    /* ---------- Cover ---------- */
+    .cover {
+      padding: 160px 0 120px;
+      background:
+        radial-gradient(60% 80% at 15% 20%, color-mix(in oklab, var(--brand-emerald-500) 30%, transparent), transparent 60%),
+        radial-gradient(50% 70% at 90% 10%, color-mix(in oklab, var(--brand-amber-500) 28%, transparent), transparent 55%),
+        var(--hero-bg);
+      color: #FAF8F2;
+      border-bottom: 1px solid var(--line);
+    }
+    .cover .container { position: relative; }
+    .cover h1 { color: #FAF8F2; }
+    .cover p { color: color-mix(in oklab, #FAF8F2 70%, transparent); }
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    @media (min-width: 880px) {
+      .cover-grid { grid-template-columns: 1.1fr 1fr; gap: 80px; }
+    }
+    .cover-meta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: color-mix(in oklab, #FAF8F2 70%, transparent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .cover-meta .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--brand-amber-500);
+    }
+    .cover-stats { display: flex; gap: 48px; margin-top: 32px; flex-wrap: wrap; }
+    .cover-stats .num { font-size: 32px; font-weight: 800; color: #FAF8F2; letter-spacing: -0.02em; }
+    .cover-stats .lbl { font-size: 11px; letter-spacing: 2.5px; color: color-mix(in oklab, #FAF8F2 65%, transparent); text-transform: uppercase; font-weight: 600; }
+    .cover-preview {
+      aspect-ratio: 4/3;
+      border-radius: 24px;
+      background: var(--bg-alt);
+      border: 1px solid color-mix(in oklab, #FAF8F2 12%, transparent);
+      display: grid; place-items: center;
+      padding: 48px;
+      overflow: hidden;
+    }
+    .cover-preview img { width: 100%; max-width: 460px; height: auto; }
+
+    /* ---------- Color tokens ---------- */
+    .swatch-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;
+    }
+    .swatch {
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+    .swatch .chip { aspect-ratio: 4/3; }
+    .swatch .meta { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
+    .swatch .meta .name { font-weight: 700; font-size: 13px; }
+    .swatch .meta .hex  { font-size: 12px; color: var(--fg-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.5px; }
+
+    .palette-row { display: flex; gap: 0; border-radius: 16px; overflow: hidden; height: 80px; }
+    .palette-row .stripe { flex: 1 1 0; }
+    .palette-row .stripe[data-step="0"] { background: #ECFDF5; }
+    .palette-row .stripe[data-step="1"] { background: #D1FAE5; }
+    .palette-row .stripe[data-step="2"] { background: #6EE7B7; }
+    .palette-row .stripe[data-step="3"] { background: #10B981; }
+    .palette-row .stripe[data-step="4"] { background: #047857; }
+    .palette-row .stripe[data-step="5"] { background: #064E3B; }
+    .palette-row .stripe[data-step="6"] { background: #FCD34D; }
+    .palette-row .stripe[data-step="7"] { background: #FBBF24; }
+    .palette-row .stripe[data-step="8"] { background: #B45309; }
+
+    /* ---------- Typography ---------- */
+    .type-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 32px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .type-row { display: flex; align-items: baseline; gap: 24px; border-bottom: 1px dashed var(--line); padding-bottom: 18px; }
+    .type-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .type-row .meta { width: 160px; font-size: 12px; color: var(--fg-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .type-row .spec { flex: 1; color: var(--fg); }
+
+    /* ---------- Logo system ---------- */
+    .logo-grid {
+      display: grid; gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .logo-tile {
+      border-radius: 20px;
+      padding: 32px;
+      display: flex; flex-direction: column; gap: 20px;
+      border: 1px solid var(--line);
+    }
+    .logo-tile.light { background: var(--brand-paper-50); }
+    .logo-tile.dark  { background: var(--brand-ink-900); color: #FAF8F2; border-color: #1F3A33; }
+    .logo-tile.paper { background: #FFFFFF; }
+    .logo-tile img   { width: 100%; height: auto; max-height: 80px; object-fit: contain; }
+    .logo-tile .lbl  { font-size: 11px; letter-spacing: 2.5px; font-weight: 700; text-transform: uppercase; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .logo-tile .name { font-size: 14px; font-weight: 700; }
+    .logo-tile .size { font-size: 12px; opacity: 0.7; }
+
+    /* ---------- Favicon matrix ---------- */
+    .fav-grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .fav-tile {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 16px;
+      align-items: center; text-align: center;
+    }
+    .fav-tile .frame { padding: 16px; border-radius: 14px; background: var(--bg-alt); }
+    .fav-tile .frame img { display: block; }
+    .fav-tile .name { font-weight: 700; font-size: 13px; }
+    .fav-tile .spec { font-size: 11px; color: var(--fg-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    /* ---------- Icon grid ---------- */
+    .icon-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .icon-tile {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex; flex-direction: column; gap: 12px;
+      align-items: center; text-align: center;
+    }
+    .icon-tile.on-dark { background: var(--brand-ink-900); border-color: #1F3A33; color: #FAF8F2; }
+    .icon-tile svg, .icon-tile img { width: 40px; height: 40px; color: inherit; }
+    .icon-tile .name { font-size: 12px; font-weight: 700; }
+    .icon-tile .id   { font-size: 10px; color: var(--fg-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.5px; }
+    .icon-tile.on-dark .id { color: color-mix(in oklab, #FAF8F2 55%, transparent); }
+
+    /* ---------- Empty states ---------- */
+    .empty-grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .empty-tile {
+      background: var(--brand-paper-100);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 28px;
+      display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center;
+    }
+    .empty-tile img { width: 100%; max-width: 280px; height: auto; }
+    .empty-tile .name { font-weight: 700; font-size: 13px; }
+
+    /* ---------- Social templates ---------- */
+    .social-grid { display: grid; gap: 32px; }
+    .social-tile {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .social-tile img { width: 100%; height: auto; border-radius: 12px; display: block; }
+    .social-tile .meta { display: flex; justify-content: space-between; padding: 4px 4px 8px; }
+    .social-tile .name { font-weight: 700; font-size: 13px; }
+    .social-tile .spec { font-size: 11px; color: var(--fg-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.5px; }
+
+    /* ---------- Do / Don't ---------- */
+    .dd-grid { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 720px) { .dd-grid { grid-template-columns: 1fr; } }
+    .dd-card { border-radius: 18px; padding: 28px; border: 1px solid var(--line); background: var(--card); }
+    .dd-card.do   { border-top: 4px solid var(--brand-emerald-500); }
+    .dd-card.dont { border-top: 4px solid #DC2626; }
+    .dd-card h3 { margin-bottom: 12px; }
+    .dd-card ul { margin: 0; padding-left: 20px; color: var(--fg-soft); }
+    .dd-card li { margin: 6px 0; }
+
+    /* ---------- Footer ---------- */
+    footer { padding: 64px 0 48px; color: var(--fg-muted); font-size: 13px; }
+    footer .row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    /* helpers */
+    .muted { color: var(--fg-muted); }
+    .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .stack { display: flex; flex-direction: column; gap: 8px; }
+  </style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="nav-brand">
+      <img src="logo/logo-mark.svg" alt="">
+      <div class="stack" style="gap:0;">
+        <span class="name">TrustVend</span>
+        <span class="sub">NIGERIA</span>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a href="#colors">Colors</a>
+      <a href="#type">Type</a>
+      <a href="#logo">Logo</a>
+      <a href="#favicons">Favicons</a>
+      <a href="#icons">Icons</a>
+      <a href="#social">Social</a>
+      <button class="btn" id="theme-toggle" type="button" aria-label="Toggle theme">Dark</button>
+    </div>
+  </div>
+</header>
+
+<!-- Cover -->
+<section class="cover">
+  <div class="container">
+    <div class="cover-grid">
+      <div>
+        <div class="cover-meta"><span class="dot"></span>Brand identity kit · v0.1 · Internal reference</div>
+        <h1 style="margin-top:24px;">TrustVend<br>Nigeria.</h1>
+        <p style="margin-top:24px; font-size:18px; max-width: 480px;">
+          A code-native brand system for a directory of verified Instagram-based
+          vendors across Nigeria. Editorial, calm, mobile-first.
+        </p>
+        <div class="cover-stats">
+          <div>
+            <div class="num">31</div>
+            <div class="lbl">Files</div>
+          </div>
+          <div>
+            <div class="num">5</div>
+            <div class="lbl">Asset types</div>
+          </div>
+          <div>
+            <div class="num">100%</div>
+            <div class="lbl">SVG / code-native</div>
+          </div>
+        </div>
+      </div>
+      <div class="cover-preview">
+        <img src="logo/logo-wordmark.svg" alt="TrustVend Nigeria wordmark">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Colors -->
+<section id="colors">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">01 — Color</div>
+      <h2>Brand palette</h2>
+      <p>Emerald-led, restrained amber accent, warm neutrals. No purple/blue gradient highlights.</p>
+    </div>
+
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="chip" style="background: #10B981"></div>
+        <div class="meta">
+          <div class="name">Emerald 500</div>
+          <div class="hex">#10B981 · oklch(0.696 0.17 162)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: #047857"></div>
+        <div class="meta">
+          <div class="name">Emerald 700</div>
+          <div class="hex">#047857 · oklch(0.508 0.123 162)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: #ECFDF5"></div>
+        <div class="meta">
+          <div class="name">Emerald 50</div>
+          <div class="hex">#ECFDF5 · oklch(0.979 0.021 166)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: #FBBF24"></div>
+        <div class="meta">
+          <div class="name">Amber 500</div>
+          <div class="hex">#FBBF24 · oklch(0.795 0.184 76)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: #B45309"></div>
+        <div class="meta">
+          <div class="name">Amber 700</div>
+          <div class="hex">#B45309 · oklch(0.476 0.146 65)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: #0F2A22"></div>
+        <div class="meta">
+          <div class="name">Ink 900</div>
+          <div class="hex">#0F2A22 · oklch(0.253 0.033 165)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: #FAF8F2"></div>
+        <div class="meta">
+          <div class="name">Paper 50</div>
+          <div class="hex">#FAF8F2 · oklch(0.984 0.006 95)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: #F1F5F1"></div>
+        <div class="meta">
+          <div class="name">Paper 100</div>
+          <div class="hex">#F1F5F1 · oklch(0.957 0.012 150)</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <div class="kicker" style="margin-bottom:12px;">Scale</div>
+      <div class="palette-row">
+        <div class="stripe" data-step="0" title="emerald 50"></div>
+        <div class="stripe" data-step="1" title="emerald 100"></div>
+        <div class="stripe" data-step="2" title="emerald 300"></div>
+        <div class="stripe" data-step="3" title="emerald 500"></div>
+        <div class="stripe" data-step="4" title="emerald 700"></div>
+        <div class="stripe" data-step="5" title="emerald 900"></div>
+        <div class="stripe" data-step="6" title="amber 300"></div>
+        <div class="stripe" data-step="7" title="amber 500"></div>
+        <div class="stripe" data-step="8" title="amber 700"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Typography -->
+<section id="type">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">02 — Typography</div>
+      <h2>Plus Jakarta Sans</h2>
+      <p>One family, six weights. Used for headlines, body, and labels. Monospace for numerics.</p>
+    </div>
+
+    <div class="type-card">
+      <div class="type-row">
+        <div class="meta">800 · H1</div>
+        <div class="spec" style="font-size: 56px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05;">TrustVend Nigeria</div>
+      </div>
+      <div class="type-row">
+        <div class="meta">700 · H2</div>
+        <div class="spec" style="font-size: 32px; font-weight: 700; letter-spacing: -0.02em;">Find vendors you can trust.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta">600 · H3</div>
+        <div class="spec" style="font-size: 20px; font-weight: 600; letter-spacing: -0.01em;">Verified Instagram businesses &amp; vendors in Nigeria.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta">500 · Body</div>
+        <div class="spec" style="font-size: 16px; font-weight: 500;">Discover, verify, and engage with trusted vendors across Nigeria. Browse by category and location, read reviews, and connect with confidence.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta">400 · Caption</div>
+        <div class="spec" style="font-size: 13px; font-weight: 400; color: var(--fg-soft);">A directory of verified Instagram vendors.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta">mono · 600</div>
+        <div class="spec" style="font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2.5px; font-weight: 700;">VERIFIED · LOCAL · CURATED</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Logo system -->
+<section id="logo">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">03 — Logo</div>
+      <h2>Mark &amp; wordmark</h2>
+      <p>The mark refines the existing shield with a refined T+V monogram and a verification tick. Single-color; never gradient-filled.</p>
+    </div>
+
+    <div class="logo-grid">
+      <div class="logo-tile paper">
+        <img src="logo/logo-mark.svg" alt="">
+        <div>
+          <div class="lbl">Mark · primary</div>
+          <div class="name">logo-mark.svg</div>
+        </div>
+      </div>
+      <div class="logo-tile dark">
+        <img src="logo/logo-mark-dark.svg" alt="">
+        <div>
+          <div class="lbl" style="color: #FBBF24;">Mark · dark UI</div>
+          <div class="name" style="color: #FAF8F2;">logo-mark-dark.svg</div>
+        </div>
+      </div>
+      <div class="logo-tile paper">
+        <img src="logo/logo-monogram.svg" alt="" style="max-height: 48px;">
+        <div>
+          <div class="lbl">Monogram</div>
+          <div class="name">logo-monogram.svg</div>
+        </div>
+      </div>
+      <div class="logo-tile paper">
+        <img src="logo/logo-wordmark.svg" alt="">
+        <div>
+          <div class="lbl">Wordmark · horizontal</div>
+          <div class="name">logo-wordmark.svg</div>
+        </div>
+      </div>
+      <div class="logo-tile paper">
+        <img src="logo/logo-wordmark-stacked.svg" alt="" style="max-height: 160px;">
+        <div>
+          <div class="lbl">Wordmark · stacked</div>
+          <div class="name">logo-wordmark-stacked.svg</div>
+        </div>
+      </div>
+      <div class="logo-tile paper">
+        <img src="logo/logo-favicon.svg" alt="" style="max-height: 48px;">
+        <div>
+          <div class="lbl">Favicon-size mark</div>
+          <div class="name">logo-favicon.svg</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Favicons -->
+<section id="favicons">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">04 — Favicons &amp; app icons</div>
+      <h2>Platform set</h2>
+      <p>SVG for every modern target. Export PNGs from these when wiring into the live app.</p>
+    </div>
+
+    <div class="fav-grid">
+      <div class="fav-tile">
+        <div class="frame"><img src="favicon/favicon.svg" width="64" height="64" alt=""></div>
+        <div>
+          <div class="name">Favicon</div>
+          <div class="spec">SVG · 64-grid</div>
+        </div>
+      </div>
+      <div class="fav-tile">
+        <div class="frame"><img src="favicon/apple-touch-icon.svg" width="96" height="96" alt=""></div>
+        <div>
+          <div class="name">Apple touch icon</div>
+          <div class="spec">SVG · 180-grid</div>
+        </div>
+      </div>
+      <div class="fav-tile">
+        <div class="frame"><img src="favicon/pwa-icon-192.svg" width="96" height="96" alt=""></div>
+        <div>
+          <div class="name">PWA 192</div>
+          <div class="spec">SVG · 192-grid</div>
+        </div>
+      </div>
+      <div class="fav-tile">
+        <div class="frame"><img src="favicon/pwa-icon-512.svg" width="96" height="96" alt=""></div>
+        <div>
+          <div class="name">PWA 512</div>
+          <div class="spec">SVG · 512-grid</div>
+        </div>
+      </div>
+      <div class="fav-tile" style="grid-column: span 2;">
+        <div class="frame" style="width: 100%;"><img src="favicon/og-image.svg" alt=""></div>
+        <div>
+          <div class="name">Open Graph</div>
+          <div class="spec">SVG · 1200 × 630</div>
+        </div>
+      </div>
+      <div class="fav-tile" style="grid-column: span 2;">
+        <div class="frame" style="width: 100%;"><img src="favicon/twitter-card.svg" alt=""></div>
+        <div>
+          <div class="name">Twitter card</div>
+          <div class="spec">SVG · 1200 × 675</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category icons -->
+<section id="icons">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">05 — Category icons</div>
+      <h2>Icon set · 10 categories</h2>
+      <p>Line + duotone. Two colors only: currentColor + brand emerald. Tested on light and dark backgrounds.</p>
+    </div>
+
+    <div class="kicker" style="margin-bottom: 12px;">On light</div>
+    <div class="icon-grid" style="color: var(--brand-ink-900);">
+      <div class="icon-tile"><img src="icons/category-beauty.svg" alt=""><div class="name">Beauty</div><div class="id">category-beauty</div></div>
+      <div class="icon-tile"><img src="icons/category-fashion.svg" alt=""><div class="name">Fashion</div><div class="id">category-fashion</div></div>
+      <div class="icon-tile"><img src="icons/category-food.svg" alt=""><div class="name">Food</div><div class="id">category-food</div></div>
+      <div class="icon-tile"><img src="icons/category-hair.svg" alt=""><div class="name">Hair</div><div class="id">category-hair</div></div>
+      <div class="icon-tile"><img src="icons/category-home.svg" alt=""><div class="name">Home</div><div class="id">category-home</div></div>
+      <div class="icon-tile"><img src="icons/category-photography.svg" alt=""><div class="name">Photography</div><div class="id">category-photography</div></div>
+      <div class="icon-tile"><img src="icons/category-tech.svg" alt=""><div class="name">Tech</div><div class="id">category-tech</div></div>
+      <div class="icon-tile"><img src="icons/category-wellness.svg" alt=""><div class="name">Wellness</div><div class="id">category-wellness</div></div>
+      <div class="icon-tile"><img src="icons/category-events.svg" alt=""><div class="name">Events</div><div class="id">category-events</div></div>
+      <div class="icon-tile"><img src="icons/category-education.svg" alt=""><div class="name">Education</div><div class="id">category-education</div></div>
+    </div>
+
+    <div class="kicker" style="margin: 32px 0 12px;">On dark</div>
+    <div class="icon-grid" style="color: #FAF8F2;">
+      <div class="icon-tile on-dark"><img src="icons/category-beauty.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-fashion.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-food.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-hair.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-home.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-photography.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-tech.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-wellness.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-events.svg" alt=""></div>
+      <div class="icon-tile on-dark"><img src="icons/category-education.svg" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<!-- Empty states -->
+<section id="empties">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">06 — Empty states</div>
+      <h2>Quiet illustrations</h2>
+      <p>Use when a list, search, or inbox has nothing to show. Two-tone: emerald + amber + paper-100.</p>
+    </div>
+    <div class="empty-grid">
+      <div class="empty-tile"><img src="illustrations/empty-no-vendors.svg" alt=""><div class="name">No vendors yet</div></div>
+      <div class="empty-tile"><img src="illustrations/empty-no-results.svg" alt=""><div class="name">No results</div></div>
+      <div class="empty-tile"><img src="illustrations/empty-no-bookmarks.svg" alt=""><div class="name">No bookmarks yet</div></div>
+      <div class="empty-tile"><img src="illustrations/empty-no-messages.svg" alt=""><div class="name">Inbox is quiet</div></div>
+      <div class="empty-tile"><img src="illustrations/empty-error.svg" alt=""><div class="name">Something went wrong</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Social templates -->
+<section id="social">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">07 — Social templates</div>
+      <h2>1200 × 630 / 1200 × 675</h2>
+      <p>Editable <span class="mono">id</span> placeholders for headlines, subheads, dates, URLs. Swap copy at build time.</p>
+    </div>
+    <div class="social-grid">
+      <div class="social-tile">
+        <img src="social/social-template-default.svg" alt="">
+        <div class="meta">
+          <div class="name">social-template-default</div>
+          <div class="spec">1200 × 630 · placeholder ids: headline, headline-2, subhead, url</div>
+        </div>
+      </div>
+      <div class="social-tile">
+        <img src="social/social-template-blog.svg" alt="">
+        <div class="meta">
+          <div class="name">social-template-blog</div>
+          <div class="spec">1200 × 630 · placeholder ids: kicker, headline, headline-2, headline-3, subhead, category-strip, url</div>
+        </div>
+      </div>
+      <div class="social-tile">
+        <img src="social/social-template-event.svg" alt="">
+        <div class="meta">
+          <div class="name">social-template-event</div>
+          <div class="spec">1200 × 630 · placeholder ids: kicker, headline, headline-2, subhead, date-day, date-month, date-year, date-time, date-place, rsvp, url</div>
+        </div>
+      </div>
+      <div class="social-tile">
+        <img src="social/social-template-vendor.svg" alt="">
+        <div class="meta">
+          <div class="name">social-template-vendor</div>
+          <div class="spec">1200 × 630 · placeholder ids: verified-label, kicker, handle, headline, subhead, stat-1-num, stat-2-num, stat-3-num, url</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Do / Don't -->
+<section id="do-dont">
+  <div class="container">
+    <div class="section-header">
+      <div class="kicker">08 — Usage</div>
+      <h2>Do &amp; don't</h2>
+      <p>Keep the mark calm. The brand only earns trust by holding back.</p>
+    </div>
+
+    <div class="dd-grid">
+      <div class="dd-card do">
+        <h3>Do</h3>
+        <ul>
+          <li>Use the mark on warm-white or deep-ink backgrounds only.</li>
+          <li>Keep clear-space around the mark equal to the height of the T-bar.</li>
+          <li>Reserve amber for small accents (verifications, dates, links).</li>
+          <li>Use Plus Jakarta Sans exclusively for headlines and copy.</li>
+          <li>Let the verification tick breathe — never on a busy ground.</li>
+        </ul>
+      </div>
+      <div class="dd-card dont">
+        <h3>Don't</h3>
+        <ul>
+          <li>Don't apply purple/blue gradient highlights to the mark.</li>
+          <li>Don't recolor the mark outside the approved palette.</li>
+          <li>Don't outline or stroke the wordmark.</li>
+          <li>Don't skew, rotate, or re-proportion individual letterforms.</li>
+          <li>Don't place the mark below the 24px minimum digital size.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container row">
+    <div>TrustVend Nigeria · Brand kit v0.1 · Internal reference</div>
+    <div class="muted">31 SVG files · self-contained HTML showcase</div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    var stored = null;
+    try { stored = localStorage.getItem('tv-brand-theme'); } catch (e) {}
+    if (stored === 'dark' || stored === 'light') {
+      root.dataset.theme = stored;
+    }
+    function paint() {
+      btn.textContent = root.dataset.theme === 'dark' ? 'Light' : 'Dark';
+      btn.setAttribute('aria-pressed', root.dataset.theme === 'dark' ? 'true' : 'false');
+    }
+    paint();
+    btn.addEventListener('click', function () {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem('tv-brand-theme', root.dataset.theme); } catch (e) {}
+      paint();
+    });
+  })();
+</script>
+
+</body>
+</html>

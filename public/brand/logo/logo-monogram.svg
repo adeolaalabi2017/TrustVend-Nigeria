@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="TrustVend monogram">
+  <title>TrustVend monogram</title>
+  <path d="M7 11 H25" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M8 15 L16 23 L24 15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

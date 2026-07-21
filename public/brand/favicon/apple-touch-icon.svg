@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" fill="none" role="img" aria-label="TrustVend">
+  <title>TrustVend Apple touch icon</title>
+  <rect x="0" y="0" width="180" height="180" rx="38" fill="#FAFAF7"/>
+  <rect x="40" y="40" width="100" height="100" rx="22" fill="#0F2A22"/>
+  <path d="M58 71 H122" stroke="#FAFAF7" stroke-width="8" stroke-linecap="round"/>
+  <path d="M60.5 84 L90 114 L119.5 84" stroke="#FAFAF7" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M115.5 64 L122 70.5 L113 79.5" stroke="#FBBF24" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

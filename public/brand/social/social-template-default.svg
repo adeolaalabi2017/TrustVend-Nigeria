@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none" role="img" aria-label="TrustVend social template — default">
+  <title>TrustVend — social template (default)</title>
+  <defs>
+    <radialGradient id="tv-hero-e" cx="15%" cy="20%" r="65%">
+      <stop offset="0%" stop-color="#34D399" stop-opacity="0.32"/>
+      <stop offset="60%" stop-color="#34D399" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="tv-hero-a" cx="90%" cy="10%" r="55%">
+      <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.30"/>
+      <stop offset="60%" stop-color="#FBBF24" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tv-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFAF7"/>
+      <stop offset="100%" stop-color="#F1F5F1"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="630" fill="url(#tv-bg)"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#tv-hero-e)"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#tv-hero-a)"/>
+
+  <g transform="translate(80,90)" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <g>
+      <rect x="0" y="0" width="96" height="96" rx="22" fill="#0F2A22"/>
+      <path d="M24 33 H72" stroke="#FAF8F2" stroke-width="7.5" stroke-linecap="round"/>
+      <path d="M26 45 L48 69 L70 45" stroke="#FAF8F2" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M66 25.5 L72 31.5 L64.5 39" stroke="#FBBF24" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <text id="headline" x="0" y="220" font-size="84" font-weight="800" fill="#0F2A22" letter-spacing="-2">Find vendors</text>
+    <text id="headline-2" x="0" y="316" font-size="84" font-weight="800" fill="#10B981" letter-spacing="-2">you can trust.</text>
+
+    <text id="subhead" x="0" y="380" font-size="22" font-weight="500" fill="#0F2A22" opacity="0.65" letter-spacing="0.4">Discover Verified Instagram Businesses &amp; Vendors.</text>
+
+    <g transform="translate(0,440)">
+      <rect x="0" y="0" width="14" height="14" rx="3" fill="#10B981"/>
+      <text x="26" y="12" font-size="14" font-weight="700" fill="#0F2A22" opacity="0.75" letter-spacing="2.5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">VERIFIED · LOCAL · CURATED</text>
+    </g>
+  </g>
+
+  <g transform="translate(820,160)" opacity="0.95">
+    <g transform="rotate(0)">
+      <path d="M0 0 L34 0 L17 30 Z" fill="#10B981" opacity="0.18" stroke="#0F2A22" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M10 6 L17 18 L26 6" stroke="#0F2A22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g transform="translate(110,40) rotate(15)">
+      <path d="M0 0 L34 0 L17 30 Z" fill="#FBBF24" opacity="0.28" stroke="#0F2A22" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M10 6 L17 18 L26 6" stroke="#0F2A22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g transform="translate(40,140) rotate(-12)">
+      <path d="M0 0 L34 0 L17 30 Z" fill="#10B981" opacity="0.22" stroke="#0F2A22" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M10 6 L17 18 L26 6" stroke="#0F2A22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g transform="translate(190,170) rotate(8)">
+      <path d="M0 0 L34 0 L17 30 Z" fill="#FBBF24" opacity="0.20" stroke="#0F2A22" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M10 6 L17 18 L26 6" stroke="#0F2A22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+
+  <g transform="translate(80,580)" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <text id="url" x="0" y="0" font-size="13" font-weight="600" fill="#0F2A22" opacity="0.55" letter-spacing="2.5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">TRUSTVEND.NG</text>
+  </g>
+</svg>

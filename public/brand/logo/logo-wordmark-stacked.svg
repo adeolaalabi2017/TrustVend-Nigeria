@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 110" fill="none" role="img" aria-label="TrustVend Nigeria stacked wordmark">
+  <title>TrustVend Nigeria stacked wordmark</title>
+  <g transform="translate(48,0)">
+    <rect x="0" y="0" width="64" height="64" rx="14" fill="#0F2A22"/>
+    <path d="M16 22 H48" stroke="#FAF8F2" stroke-width="5" stroke-linecap="round"/>
+    <path d="M17.5 30 L32 46 L46.5 30" stroke="#FAF8F2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M44.5 17.5 L48 21 L43 26" stroke="#FBBF24" stroke-width="3.25" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <text x="80" y="90" text-anchor="middle" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#0F2A22" letter-spacing="-0.6">TrustVend</text>
+  <text x="80" y="104" text-anchor="middle" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="8" font-weight="600" fill="#0F2A22" opacity="0.55" letter-spacing="2.6">NIGERIA</text>
+</svg>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" role="img" aria-label="Home">
+  <title>Home</title>
+  <path d="M10 24 L24 12 L38 24 V36 H 28 V28 H 20 V36 H 10 Z" fill="#10B981" fill-opacity="0.12"/>
+  <path d="M10 24 L24 12 L38 24 V36 H 28 V28 H 20 V36 H 10 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>
